@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en" data-theme="purple">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>KJ AI • Powered by OpenRouter</title>
+  <title>KJ AI • Advanced AI Assistant</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -19,6 +19,7 @@
       --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05); --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
       --transition-fast: 150ms ease; --transition-normal: 300ms cubic-bezier(0.4, 0, 0.2, 1);
       --radius-sm: 8px; --radius-md: 12px; --radius-lg: 20px; --radius-full: 9999px;
+      --sidebar-width: 280px;
     }
     [data-theme="dark"] {
       --bg-primary: #0f172a; --bg-secondary: #1e293b; --bg-tertiary: #334155;
@@ -38,39 +39,63 @@
       --code-bg: #0f0824; --code-header: #0a0514;
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg-primary); color: var(--text-primary); line-height: 1.6; height: 100vh; display: flex; flex-direction: column; overflow: hidden; transition: background var(--transition-normal), color var(--transition-normal); }
-    [data-theme="purple"] body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(ellipse at 20% 80%, rgba(124, 58, 237, 0.25) 0%, transparent 50%), radial-gradient(ellipse at 80% 20%, rgba(167, 139, 250, 0.2) 0%, transparent 50%), radial-gradient(ellipse at 50% 50%, rgba(192, 132, 252, 0.15) 0%, transparent 70%); animation: galaxyPulse 12s ease-in-out infinite; pointer-events: none; z-index: -2; }
-    [data-theme="purple"] body::after { content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-image: radial-gradient(2px 2px at 20px 30px, rgba(255,255,255,0.3), transparent), radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.2), transparent), radial-gradient(1px 1px at 90px 40px, rgba(255,255,255,0.4), transparent); background-size: 200px 100px; animation: starsMove 50s linear infinite; pointer-events: none; z-index: -1; opacity: 0.6; }
+    body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg-primary); color: var(--text-primary); line-height: 1.6; height: 100vh; display: flex; overflow: hidden; transition: background var(--transition-normal), color var(--transition-normal); }
+    
+    /* Sidebar */
+    .sidebar { width: var(--sidebar-width); background: var(--bg-secondary); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; transition: all var(--transition-normal); z-index: 100; }
+    .sidebar-header { padding: 1.25rem; border-bottom: 1px solid var(--border-color); }
+    .new-chat-btn { width: 100%; background: var(--accent-gradient); color: white; border: none; padding: 0.75rem 1rem; border-radius: var(--radius-md); font-weight: 600; cursor: pointer; transition: all var(--transition-fast); display: flex; align-items: center; justify-content: center; gap: 0.5rem; box-shadow: var(--shadow-md); }
+    .new-chat-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+    [data-theme="purple"] .new-chat-btn { box-shadow: var(--shadow-glow); }
+    .sidebar-content { flex: 1; overflow-y: auto; padding: 1rem; }
+    .chat-history-item { padding: 0.75rem; border-radius: var(--radius-sm); cursor: pointer; transition: all var(--transition-fast); margin-bottom: 0.5rem; color: var(--text-secondary); }
+    .chat-history-item:hover { background: var(--bg-tertiary); color: var(--text-primary); }
+    .sidebar-footer { padding: 1rem; border-top: 1px solid var(--border-color); }
+    .theme-toggle { width: 100%; background: var(--bg-tertiary); border: 1px solid var(--border-color); color: var(--text-primary); padding: 0.6rem; border-radius: var(--radius-sm); cursor: pointer; transition: all var(--transition-fast); }
+    .theme-toggle:hover { background: var(--bg-primary); }
+    
+    /* Main Content */
+    .main-content { flex: 1; display: flex; flex-direction: column; position: relative; }
+    .top-bar { padding: 1rem 1.5rem; border-bottom: 1px solid var(--border-color); background: var(--bg-secondary); display: flex; justify-content: space-between; align-items: center; }
+    .mobile-menu-btn { display: none; background: none; border: none; color: var(--text-primary); cursor: pointer; padding: 0.5rem; }
+    
+    /* Model Selector */
+    .model-selector-wrapper { position: relative; }
+    .model-selector-btn { background: var(--bg-tertiary); border: 1px solid var(--border-color); color: var(--text-primary); padding: 0.6rem 1rem; border-radius: var(--radius-md); cursor: pointer; display: flex; align-items: center; gap: 0.5rem; font-weight: 500; transition: all var(--transition-fast); }
+    .model-selector-btn:hover { border-color: var(--accent-primary); }
+    .model-dropdown { position: absolute; bottom: 100%; left: 0; right: 0; margin-bottom: 0.5rem; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: var(--radius-md); box-shadow: var(--shadow-lg); overflow: hidden; display: none; z-index: 1000; }
+    .model-dropdown.active { display: block; animation: slideUp 0.2s ease; }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .model-option { padding: 0.85rem 1rem; cursor: pointer; transition: all var(--transition-fast); border-bottom: 1px solid var(--border-color); }
+    .model-option:last-child { border-bottom: none; }
+    .model-option:hover { background: var(--bg-tertiary); }
+    .model-option.active { background: var(--accent-gradient); color: white; }
+    .model-name { font-weight: 600; margin-bottom: 0.25rem; }
+    .model-desc { font-size: 0.82rem; color: var(--text-muted); }
+    .model-option.active .model-desc { color: rgba(255,255,255,0.8); }
+    
+    /* Chat Container */
+    .chat-container { flex: 1; overflow-y: auto; padding: 1.5rem; position: relative; }
+    [data-theme="purple"] .chat-container::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(ellipse at 20% 80%, rgba(124, 58, 237, 0.15) 0%, transparent 50%), radial-gradient(ellipse at 80% 20%, rgba(167, 139, 250, 0.1) 0%, transparent 50%), radial-gradient(ellipse at 50% 50%, rgba(192, 132, 252, 0.1) 0%, transparent 70%); animation: galaxyPulse 12s ease-in-out infinite; pointer-events: none; z-index: 0; }
+    [data-theme="purple"] .chat-container::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: radial-gradient(2px 2px at 20px 30px, rgba(255,255,255,0.3), transparent), radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.2), transparent), radial-gradient(1px 1px at 90px 40px, rgba(255,255,255,0.4), transparent); background-size: 200px 100px; animation: starsMove 50s linear infinite; pointer-events: none; z-index: 0; opacity: 0.6; }
     @keyframes galaxyPulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.85; transform: scale(1.03); } }
     @keyframes starsMove { from { background-position: 0 0; } to { background-position: 200px 100px; } }
-    header { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; border-bottom: 1px solid var(--border-color); background: var(--bg-secondary); z-index: 10; transition: background var(--transition-normal), border-color var(--transition-normal); }
-    .logo { display: flex; align-items: center; gap: 0.75rem; font-weight: 600; font-size: 1.35rem; letter-spacing: -0.02em; }
-    .logo-icon { width: 36px; height: 36px; background: var(--accent-gradient); border-radius: var(--radius-sm); display: grid; place-items: center; color: white; font-weight: 700; font-size: 1.1rem; box-shadow: var(--shadow-md); }
-    [data-theme="purple"] .logo-icon { box-shadow: var(--shadow-glow); animation: pulse 2s ease-in-out infinite; }
-    @keyframes pulse { 0%, 100% { box-shadow: 0 0 20px -5px rgba(167, 139, 250, 0.5); } 50% { box-shadow: 0 0 30px -5px rgba(167, 139, 250, 0.8); } }
-    .logo-text { background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-    .header-actions { display: flex; gap: 0.5rem; }
-    .icon-btn { background: var(--bg-tertiary); border: 1px solid var(--border-color); color: var(--text-secondary); width: 36px; height: 36px; border-radius: var(--radius-sm); display: grid; place-items: center; cursor: pointer; transition: all var(--transition-fast); padding: 0; }
-    .icon-btn:hover { background: var(--accent-primary); color: white; border-color: var(--accent-primary); transform: translateY(-1px); }
-    .icon-btn svg { width: 18px; height: 18px; }
-    .model-bar { display: flex; gap: 0.5rem; padding: 0.75rem 1.5rem; border-bottom: 1px solid var(--border-color); background: var(--bg-secondary); overflow-x: auto; scrollbar-width: none; }
-    .model-bar::-webkit-scrollbar { display: none; }
-    .model-chip { background: var(--bg-tertiary); border: 1px solid var(--border-color); color: var(--text-secondary); padding: 0.4rem 0.85rem; border-radius: var(--radius-full); font-size: 0.82rem; font-weight: 500; cursor: pointer; transition: all var(--transition-fast); white-space: nowrap; }
-    .model-chip:hover { border-color: var(--accent-primary); color: var(--text-primary); }
-    .model-chip.active { background: var(--accent-gradient); color: white; border-color: transparent; box-shadow: var(--shadow-md); }
-    [data-theme="purple"] .model-chip.active { box-shadow: var(--shadow-glow); }
-    .chat-container { flex: 1; overflow-y: auto; padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; }
+    .chat-container > * { position: relative; z-index: 1; }
     .chat-container::-webkit-scrollbar { width: 6px; }
     .chat-container::-webkit-scrollbar-track { background: transparent; }
     .chat-container::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 3px; }
     .chat-container::-webkit-scrollbar-thumb:hover { background: var(--accent-primary); }
+    
+    /* Welcome */
     .welcome { text-align: center; padding: 4rem 1rem 2rem; color: var(--text-muted); animation: fadeIn 0.6s ease; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     .welcome h2 { font-size: 1.75rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-primary); background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     .welcome-suggestions { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.6rem; margin-top: 1rem; }
     .suggestion-chip { background: var(--bg-tertiary); border: 1px solid var(--border-color); color: var(--text-secondary); padding: 0.6rem 1rem; border-radius: var(--radius-full); font-size: 0.85rem; cursor: pointer; transition: all var(--transition-fast); }
     .suggestion-chip:hover { border-color: var(--accent-primary); color: var(--text-primary); transform: translateY(-2px); }
-    .message { display: flex; gap: 0.85rem; max-width: 88%; animation: slideIn 0.3s ease; }
+    
+    /* Messages */
+    .message { display: flex; gap: 0.85rem; max-width: 88%; margin-bottom: 1.25rem; animation: slideIn 0.3s ease; }
     @keyframes slideIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
     .message.user { margin-left: auto; flex-direction: row-reverse; }
     .message.ai { margin-right: auto; }
@@ -102,27 +127,49 @@
     .action-btn.liked { background: var(--accent-primary); color: white; border-color: var(--accent-primary); }
     .action-btn svg { width: 14px; height: 14px; }
     .typing-indicator { display: flex; gap: 4px; padding: 0.5rem 0; }
-    .typing-indicator span { width: 7px; height: 7px; background: var(--text-muted); border-radius: 50%; animation: bounce 1.4s ease-in-out infinite both; }
+    .typing-indicator span { width: 7px; height: 7px; background: var(--text-secondary); border-radius: 50%; animation: bounce 1.4s ease-in-out infinite both; }
     .typing-indicator span:nth-child(1) { animation-delay: -0.32s; } .typing-indicator span:nth-child(2) { animation-delay: -0.16s; } .typing-indicator span:nth-child(3) { animation-delay: 0s; }
     @keyframes bounce { 0%, 80%, 100% { transform: scale(0.6); opacity: 0.5; } 40% { transform: scale(1); opacity: 1; } }
+    
+    /* Input Area */
     .input-area { padding: 1rem 1.5rem 1.5rem; border-top: 1px solid var(--border-color); background: var(--bg-secondary); transition: background var(--transition-normal), border-color var(--transition-normal); }
-    .input-wrapper { display: flex; gap: 0.75rem; align-items: flex-end; max-width: 900px; margin: 0 auto; }
+    .input-wrapper { max-width: 900px; margin: 0 auto; }
+    .file-preview { display: flex; gap: 0.5rem; margin-bottom: 0.75rem; flex-wrap: wrap; }
+    .file-preview-item { background: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 0.4rem 0.6rem; display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; }
+    .file-preview-item img { width: 32px; height: 32px; object-fit: cover; border-radius: 4px; }
+    .file-preview-item .remove-file { cursor: pointer; color: var(--text-muted); transition: color var(--transition-fast); }
+    .file-preview-item .remove-file:hover { color: var(--accent-primary); }
+    .input-row { display: flex; gap: 0.75rem; align-items: flex-end; }
+    .input-left { flex: 1; display: flex; flex-direction: column; gap: 0.5rem; }
+    .file-upload-btn { background: var(--bg-tertiary); border: 1px solid var(--border-color); color: var(--text-secondary); width: 42px; height: 42px; border-radius: var(--radius-md); display: grid; place-items: center; cursor: pointer; transition: all var(--transition-fast); flex-shrink: 0; }
+    .file-upload-btn:hover { border-color: var(--accent-primary); color: var(--text-primary); }
     .prompt-input { flex: 1; padding: 0.9rem 1.2rem; background: var(--bg-tertiary); border: 2px solid var(--border-color); border-radius: var(--radius-lg); color: var(--text-primary); font-size: 0.95rem; font-family: inherit; resize: none; min-height: 52px; max-height: 150px; line-height: 1.5; transition: all var(--transition-fast); }
     .prompt-input:focus { outline: none; border-color: var(--accent-primary); box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15); background: var(--bg-primary); }
     [data-theme="purple"] .prompt-input:focus { box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.25); }
     .prompt-input::placeholder { color: var(--text-muted); }
     .send-btn { background: var(--accent-gradient); border: none; color: white; width: 48px; height: 48px; border-radius: var(--radius-full); display: grid; place-items: center; cursor: pointer; transition: all var(--transition-fast); flex-shrink: 0; box-shadow: var(--shadow-md); }
-    .send-btn:hover { transform: translateY(-2px) scale(1.05); box-shadow: var(--shadow-lg); }
-    [data-theme="purple"] .send-btn::before { content: ''; position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px; background: var(--accent-gradient); border-radius: inherit; z-index: -1; animation: borderFlow 2s linear infinite; opacity: 0; transition: opacity var(--transition-fast); }
-    [data-theme="purple"] .send-btn:hover::before { opacity: 1; }
+    .send-btn:hover:not(:disabled) { transform: translateY(-2px) scale(1.05); box-shadow: var(--shadow-lg); }
+    .send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
     .send-btn svg { width: 20px; height: 20px; transition: transform var(--transition-fast); }
-    .send-btn:hover svg { transform: translateX(2px); }
-    .send-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+    .send-btn:hover:not(:disabled) svg { transform: translateX(2px); }
     .input-hint { text-align: center; font-size: 0.75rem; color: var(--text-muted); margin-top: 0.5rem; opacity: 0.8; }
+    .cooldown-warning { background: #f59e0b; color: white; padding: 0.5rem 1rem; border-radius: var(--radius-sm); text-align: center; margin-bottom: 0.75rem; font-size: 0.85rem; display: none; animation: shake 0.5s ease; }
+    .cooldown-warning.show { display: block; }
+    @keyframes shake { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-5px); } 40%, 80% { transform: translateX(5px); } }
+    
+    /* Queue Indicator */
+    .queue-indicator { background: var(--bg-tertiary); border: 1px solid var(--border-color); padding: 0.6rem 1rem; border-radius: var(--radius-md); margin-bottom: 0.75rem; font-size: 0.85rem; color: var(--text-secondary); display: none; }
+    .queue-indicator.show { display: flex; align-items: center; gap: 0.5rem; }
+    .queue-indicator svg { width: 16px; height: 16px; animation: spin 1s linear infinite; }
+    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    
+    /* Scroll Lock */
     .scroll-lock-indicator { position: absolute; bottom: 100px; right: 24px; background: var(--accent-primary); color: white; padding: 0.5rem 0.85rem; border-radius: var(--radius-full); font-size: 0.8rem; font-weight: 500; box-shadow: var(--shadow-lg); cursor: pointer; opacity: 0; transform: translateY(10px); transition: all var(--transition-normal); pointer-events: none; z-index: 5; display: flex; align-items: center; gap: 0.4rem; }
     .scroll-lock-indicator.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
     .scroll-lock-indicator svg { width: 14px; height: 14px; animation: bounceArrow 1.5s ease-in-out infinite; }
     @keyframes bounceArrow { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(3px); } }
+    
+    /* Settings Modal */
     .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.5); display: flex; align-items: center; justify-content: center; z-index: 1000; opacity: 0; visibility: hidden; transition: all var(--transition-normal); backdrop-filter: blur(4px); }
     .modal-overlay.active { opacity: 1; visibility: visible; }
     .modal { background: var(--bg-secondary); border-radius: var(--radius-lg); padding: 1.75rem; width: 90%; max-width: 420px; box-shadow: var(--shadow-lg); border: 1px solid var(--border-color); transform: scale(0.95) translateY(15px); transition: transform var(--transition-normal); }
@@ -147,45 +194,120 @@
     .toggle-slider::before { position: absolute; content: ""; height: 18px; width: 18px; left: 2px; bottom: 2px; background: white; border-radius: 50%; transition: var(--transition-fast); box-shadow: var(--shadow-sm); }
     input:checked + .toggle-slider { background: var(--accent-primary); border-color: var(--accent-primary); }
     input:checked + .toggle-slider::before { transform: translateX(22px); }
-    @media (max-width: 640px) { .message { max-width: 92%; } .input-wrapper { padding: 0 0.25rem; } .model-bar { padding: 0.75rem 1rem; } header, .input-area { padding-left: 1rem; padding-right: 1rem; } .message-actions { opacity: 1; } }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .sidebar { position: fixed; left: 0; top: 0; height: 100%; transform: translateX(-100%); box-shadow: var(--shadow-lg); }
+      .sidebar.open { transform: translateX(0); }
+      .mobile-menu-btn { display: block; }
+      .message { max-width: 92%; }
+      .input-wrapper { padding: 0 0.25rem; }
+      .message-actions { opacity: 1; }
+    }
   </style>
 </head>
 <body>
-  <header>
-    <div class="logo"><div class="logo-icon">✦</div><span class="logo-text">KJ AI</span></div>
-    <div class="header-actions">
-      <button class="icon-btn" onclick="clearChat()" aria-label="Clear chat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></button>
-      <button class="icon-btn" onclick="openSettings()" aria-label="Open settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 15a3 3 0 100-6 3 3 0 000 6z"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/></svg></button>
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <button class="new-chat-btn" onclick="startNewChat()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+        New Chat
+      </button>
     </div>
-  </header>
-  <div class="model-bar">
-    <button class="model-chip active" onclick="setModel('meta-llama/llama-3.3-70b-instruct')">🧠 70B Turbo</button>
-    <button class="model-chip" onclick="setModel('meta-llama/llama-3.1-8b-instruct')">⚡ 8B Fast</button>
-    <button class="model-chip" onclick="setModel('mistralai/mistral-7b-instruct')">💨 Mistral</button>
-  </div>
-  <div class="chat-container" id="chatContainer">
-    <div class="welcome" id="welcomeScreen">
-      <h2>👋 Welcome to KJ AI</h2>
-      <div class="welcome-suggestions">
-        <button class="suggestion-chip" onclick="useSuggestion('Explain quantum computing simply')">Explain quantum computing</button>
-        <button class="suggestion-chip" onclick="useSuggestion('Write a Python function to sort a list')">Write Python code</button>
-        <button class="suggestion-chip" onclick="useSuggestion('Help me debug this JavaScript code')">Debug JS code</button>
-        <button class="suggestion-chip" onclick="useSuggestion('What are the best practices for React?')">React tips</button>
+    <div class="sidebar-content" id="chatHistory">
+      <!-- Chat history items will be added here -->
+    </div>
+    <div class="sidebar-footer">
+      <button class="theme-toggle" onclick="openSettings()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline;vertical-align:middle;margin-right:0.5rem"><path d="M12 15a3 3 0 100-6 3 3 0 000 6z"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+        Settings
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="top-bar">
+      <button class="mobile-menu-btn" onclick="toggleSidebar()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+      </button>
+      
+      <div class="model-selector-wrapper">
+        <button class="model-selector-btn" onclick="toggleModelDropdown()">
+          <span id="selectedModelName">Qwen3.6 Plus</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="model-dropdown" id="modelDropdown">
+          <div class="model-option active" data-model="qwen/qwen3.6-plus:free" data-name="Qwen3.6 Plus">
+            <div class="model-name">Qwen3.6 Plus</div>
+            <div class="model-desc">Complex Thinker & Strong Coder • 1M context</div>
+          </div>
+          <div class="model-option" data-model="nvidia/nemotron-3-super-120b-a12b:free" data-name="Nemotron 3 Super">
+            <div class="model-name">Nemotron 3 Super</div>
+            <div class="model-desc">Fast & Efficient • Multi-agent specialist</div>
+          </div>
+          <div class="model-option" data-model="minimax/minimax-m2.5:free" data-name="MiniMax M2.5">
+            <div class="model-name">MiniMax M2.5</div>
+            <div class="model-desc">Office & Productivity • Code expert</div>
+          </div>
+          <div class="model-option" data-model="stepfun/step-3.5-flash:free" data-name="Step 3.5 Flash">
+            <div class="model-name">Step 3.5 Flash</div>
+            <div class="model-desc">Ultra-Fast Reasoning • 196B params</div>
+          </div>
+        </div>
+      </div>
+
+      <button class="icon-btn" onclick="openSettings()" style="background:var(--bg-tertiary);border:1px solid var(--border-color);width:36px;height:36px;border-radius:var(--radius-sm);cursor:pointer;display:grid;place-items:center">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 15a3 3 0 100-6 3 3 0 000 6z"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+      </button>
+    </div>
+
+    <div class="chat-container" id="chatContainer">
+      <div class="welcome" id="welcomeScreen">
+        <h2>👋 Welcome to KJ AI</h2>
+        <div class="welcome-suggestions">
+          <button class="suggestion-chip" onclick="useSuggestion('Explain quantum computing simply')">Explain quantum computing</button>
+          <button class="suggestion-chip" onclick="useSuggestion('Write a Python function to sort a list')">Write Python code</button>
+          <button class="suggestion-chip" onclick="useSuggestion('Help me debug this JavaScript code')">Debug JS code</button>
+          <button class="suggestion-chip" onclick="useSuggestion('What are the best practices for React?')">React tips</button>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="scroll-lock-indicator" id="scrollIndicator" onclick="scrollToBottom()">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 13l5 5 5-5M7 6l5 5 5-5"/></svg>
-    Auto-scroll unlocked
-  </div>
-  <div class="input-area">
-    <div class="input-wrapper">
-      <textarea id="promptInput" class="prompt-input" placeholder="Message KJ AI..." rows="1"></textarea>
-      <button class="send-btn" id="sendBtn" onclick="sendMessage()" aria-label="Send message"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg></button>
-    </div>
-    <div class="input-hint">Press Enter to send • Shift+Enter for new line</div>
-  </div>
 
+    <div class="scroll-lock-indicator" id="scrollIndicator" onclick="scrollToBottom()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 13l5 5 5-5M7 6l5 5 5-5"/></svg>
+      Auto-scroll unlocked
+    </div>
+
+    <div class="input-area">
+      <div class="input-wrapper">
+        <div class="cooldown-warning" id="cooldownWarning">
+          ⚠️ Please wait <span id="cooldownTimer">3</span> seconds before sending another message
+        </div>
+        <div class="queue-indicator" id="queueIndicator">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+          <span id="queueText">1 message in queue</span>
+        </div>
+        <div class="file-preview" id="filePreview"></div>
+        <div class="input-row">
+          <input type="file" id="fileInput" multiple accept="image/*,video/*" style="display:none" onchange="handleFileSelect(event)">
+          <button class="file-upload-btn" onclick="document.getElementById('fileInput').click()" title="Attach files">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/></svg>
+          </button>
+          <div class="input-left">
+            <textarea id="promptInput" class="prompt-input" placeholder="Message KJ AI..." rows="1"></textarea>
+          </div>
+          <button class="send-btn" id="sendBtn" onclick="sendMessage()" aria-label="Send message">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+          </button>
+        </div>
+        <div class="input-hint">Press Enter to send • Shift+Enter for new line</div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Settings Modal -->
   <div class="modal-overlay" id="settingsModal" role="dialog" aria-modal="true">
     <div class="modal">
       <div class="modal-header"><h2 class="modal-title">⚙️ Settings</h2><button class="modal-close" onclick="closeSettings()">✕</button></div>
@@ -211,17 +333,21 @@
 
 <script>
 // ================= CONFIGURATION =================
-// PASTE YOUR CLOUDFLARE WORKER URL HERE:
-const API_URL = 'https://kj-ai-proxy.babydripson.workers.dev/';
+const API_URL = 'https://kj-ai-proxy.babydripson.workers.dev';
 // =================================================
 
 const state = {
-  model: 'meta-llama/llama-3.3-70b-instruct',
-  theme: localStorage.getItem('kjai-theme') || 'light',
+  model: 'qwen/qwen3.6-plus:free',
+  modelName: 'Qwen3.6 Plus',
+  theme: localStorage.getItem('kjai-theme') || 'purple',
   animations: localStorage.getItem('kjai-animations') !== 'false',
   isGenerating: false,
   isScrollLocked: true,
-  scrollThreshold: 100
+  scrollThreshold: 100,
+  messageQueue: [],
+  lastMessageTime: 0,
+  cooldownPeriod: 3000,
+  attachedFiles: []
 };
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -229,6 +355,7 @@ document.addEventListener('DOMContentLoaded', () => {
   applyAnimations(state.animations);
   setupInputHandlers();
   setupScrollHandler();
+  setupModelDropdown();
   loadThemeSelection();
   document.getElementById('promptInput').focus();
 });
@@ -261,186 +388,4 @@ function setupScrollHandler() {
   const indicator = document.getElementById('scrollIndicator');
   chat.addEventListener('scroll', () => {
     const isAtBottom = chat.scrollHeight - chat.scrollTop - chat.clientHeight <= state.scrollThreshold;
-    if (!isAtBottom && state.isScrollLocked) { state.isScrollLocked = false; indicator.classList.add('visible'); }
-    else if (isAtBottom && !state.isScrollLocked) { state.isScrollLocked = true; indicator.classList.remove('visible'); }
-  });
-}
-function scrollToBottom() {
-  const chat = document.getElementById('chatContainer');
-  chat.scrollTo({ top: chat.scrollHeight, behavior: state.animations ? 'smooth' : 'auto' });
-  state.isScrollLocked = true;
-  document.getElementById('scrollIndicator').classList.remove('visible');
-}
-
-function setupInputHandlers() {
-  const input = document.getElementById('promptInput');
-  const sendBtn = document.getElementById('sendBtn');
-  input.addEventListener('input', function() {
-    this.style.height = 'auto';
-    this.style.height = Math.min(this.scrollHeight, 150) + 'px';
-    sendBtn.disabled = !this.value.trim();
-  });
-  input.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); if (input.value.trim() && !state.isGenerating) sendMessage(); }
-  });
-  sendBtn.disabled = true;
-}
-
-function setModel(model) {
-  state.model = model;
-  document.querySelectorAll('.model-chip').forEach(c => c.classList.remove('active'));
-  event.currentTarget.classList.add('active');
-}
-
-function parseMarkdown(text) {
-  if (!text) return '';
-  let html = text;
-  html = html.replace(/```(\w+)?\n([\s\S]*?)```/g, (m, lang, code) => {
-    lang = lang || 'text';
-    const id = 'code-' + Math.random().toString(36).substr(2, 9);
-    return `<div class="code-block" id="${id}"><div class="code-header"><span class="code-lang">${lang.toUpperCase()}</span><div class="code-actions"><button class="code-btn" onclick="copyCode('${id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>Copy</button></div></div><div class="code-body">${escapeHtml(code.trim())}</div><div class="code-footer"><button class="code-btn" onclick="copyCode('${id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>Copy Code</button></div></div>`;
-  });
-  html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
-  html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-  html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
-  html = html.replace(/^### (.+)$/gm, '<h3>$1</h3>');
-  html = html.replace(/^\- (.+)$/gm, '<li>$1</li>');
-  html = html.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
-  html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>');
-  html = html.replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>');
-  return '<p>' + html + '</p>';
-}
-
-function escapeHtml(text) { if (!text) return ''; const d = document.createElement('div'); d.textContent = String(text); return d.innerHTML; }
-
-function copyCode(id) {
-  const block = document.getElementById(id); if (!block) return;
-  navigator.clipboard.writeText(block.querySelector('.code-body').textContent).then(() => {
-    block.querySelectorAll('.code-btn').forEach(btn => {
-      const orig = btn.innerHTML; btn.innerHTML = '✓ Copied!'; btn.style.color = '#22c55e';
-      setTimeout(() => { btn.innerHTML = orig; btn.style.color = ''; }, 2000);
-    });
-  });
-}
-
-function copyMessage(id) {
-  const msg = document.querySelector(`[data-message-id="${id}"] .message-content`); if (!msg) return;
-  navigator.clipboard.writeText(msg.textContent).then(() => {
-    const btn = document.querySelector(`[data-message-id="${id}"] .action-btn.copy`);
-    if (btn) { const o = btn.innerHTML; btn.innerHTML = '✓ Copied'; setTimeout(() => btn.innerHTML = o, 2000); }
-  });
-}
-
-function toggleLike(id) {
-  const btn = document.querySelector(`[data-message-id="${id}"] .action-btn.like`); if (!btn) return;
-  btn.classList.toggle('liked');
-  btn.innerHTML = btn.classList.contains('liked') ? '<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg> Liked!' : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg> Like';
-}
-
-async function retryMessage(id) {
-  const msg = document.querySelector(`[data-message-id="${id}"]`); if (!msg) return;
-  const prev = msg.previousElementSibling;
-  if (!prev || !prev.classList.contains('user')) return;
-  const prompt = prev.querySelector('.message-content').textContent;
-  msg.style.opacity = '0'; msg.style.transform = 'translateY(-10px)';
-  setTimeout(() => msg.remove(), 200);
-  await sendMessage(prompt);
-}
-
-async function sendMessage(promptToUse = null) {
-  if (state.isGenerating) return;
-  const input = document.getElementById('promptInput');
-  const prompt = promptToUse || input.value.trim();
-  if (!prompt) return;
-  const welcome = document.getElementById('welcomeScreen');
-  if (welcome) welcome.style.display = 'none';
-  addMessage(prompt, 'user');
-  if (!promptToUse) { input.value = ''; input.style.height = 'auto'; document.getElementById('sendBtn').disabled = true; }
-  state.isScrollLocked = true; document.getElementById('scrollIndicator').classList.remove('visible');
-  const typingId = addMessage('<div class="typing-indicator"><span></span><span></span><span></span></div>', 'ai', true);
-  state.isGenerating = true;
-  try {
-    const res = await fetch(API_URL, {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ prompt, model: state.model })
-    });
-    if (!res.ok) throw new Error(`Server error: ${res.status}`);
-    removeMessage(typingId);
-    const aiId = addMessage('', 'ai', true);
-    const aiContent = document.querySelector(`[data-message-id="${aiId}"] .message-content`);
-    let full = '';
-    const reader = res.body.getReader();
-    const decoder = new TextDecoder();
-    let buffer = '';
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      buffer += decoder.decode(value, { stream: true });
-      const lines = buffer.split('\n');
-      buffer = lines.pop();
-      for (const line of lines) {
-        if (line.startsWith(' ')) {
-          const data = line.slice(6).trim();
-          if (data === '[DONE]') break;
-          try {
-            const p = JSON.parse(data);
-            const c = p.choices?.[0]?.delta?.content;
-            if (c) { full += c; aiContent.innerHTML = parseMarkdown(full); if (state.isScrollLocked) scrollToBottom(); }
-          } catch(e) {}
-        }
-      }
-    }
-    addMessageActions(aiId);
-  } catch (err) {
-    removeMessage(typingId);
-    addMessage(`❌ Error: ${err.message}`, 'ai');
-  } finally { state.isGenerating = false; input.focus(); }
-}
-
-function addMessage(text, sender, returnId = false) {
-  const chat = document.getElementById('chatContainer');
-  const id = 'msg-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
-  const msg = document.createElement('div');
-  msg.className = `message ${sender}`;
-  msg.setAttribute('data-message-id', id);
-  msg.innerHTML = `<div class="message-avatar">${sender === 'ai' ? '✦' : '👤'}</div><div class="message-wrapper"><div class="message-content">${sender === 'ai' ? parseMarkdown(text) : escapeHtml(text).replace(/\n/g, '<br>')}</div></div>`;
-  chat.appendChild(msg); scrollToBottom();
-  return returnId ? id : null;
-}
-
-function addMessageActions(id) {
-  const wrapper = document.querySelector(`[data-message-id="${id}"] .message-wrapper`); if (!wrapper) return;
-  const actions = document.createElement('div');
-  actions.className = 'message-actions';
-  actions.innerHTML = `
-    <button class="action-btn like" onclick="toggleLike('${id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg> Like</button>
-    <button class="action-btn retry" onclick="retryMessage('${id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg> Retry</button>
-    <button class="action-btn copy" onclick="copyMessage('${id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copy</button>`;
-  wrapper.appendChild(actions);
-}
-
-function removeMessage(id) {
-  const msg = document.querySelector(`[data-message-id="${id}"]`); if (!msg) return;
-  msg.style.opacity = '0'; msg.style.transform = 'translateY(-10px)';
-  setTimeout(() => msg.remove(), state.animations ? 200 : 0);
-}
-
-function useSuggestion(text) {
-  const input = document.getElementById('promptInput');
-  input.value = text; input.dispatchEvent(new Event('input')); input.focus();
-}
-
-function clearChat() {
-  const chat = document.getElementById('chatContainer');
-  const welcome = document.getElementById('welcomeScreen');
-  chat.querySelectorAll('.message').forEach(m => { m.style.opacity = '0'; m.style.transform = 'translateY(-10px)'; });
-  setTimeout(() => { chat.innerHTML = ''; if (welcome) { welcome.style.display = 'block'; chat.appendChild(welcome); } state.isScrollLocked = true; }, state.animations ? 200 : 0);
-}
-
-function openSettings() { document.getElementById('settingsModal').classList.add('active'); document.body.style.overflow = 'hidden'; }
-function closeSettings() { document.getElementById('settingsModal').classList.remove('active'); document.body.style.overflow = ''; }
-document.getElementById('settingsModal').addEventListener('click', (e) => { if (e.target.id === 'settingsModal') closeSettings(); });
-document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeSettings(); });
-</script>
-</body>
-</html>
+    if (!isAtBottom && state.isScrollLocked) { state.isScrollLocked = false; indicator.classList.add('
