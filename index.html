@@ -54,13 +54,13 @@
     .top-bar { padding: 1rem 1.5rem; border-bottom: 1px solid var(--border-color); background: var(--bg-secondary); display: flex; justify-content: space-between; align-items: center; z-index: 10; }
     .mobile-menu-btn { display: none; background: none; border: none; color: var(--text-primary); cursor: pointer; padding: 0.5rem; }
     
-    /* Model Selector - DROP UP */
+    /* Model Selector - DROP DOWN (fixed) */
     .model-wrapper { position: relative; }
     .model-btn { background: var(--bg-tertiary); border: 1px solid var(--border-color); color: var(--text-primary); padding: 0.6rem 1rem; border-radius: var(--radius-md); cursor: pointer; display: flex; align-items: center; gap: 0.5rem; font-weight: 500; transition: all 0.2s; }
     .model-btn:hover { border-color: var(--accent-primary); }
-    .model-dropdown { position: absolute; bottom: 120%; left: 0; right: 0; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: var(--radius-md); box-shadow: 0 -10px 15px -3px rgba(0,0,0,0.1); overflow: hidden; display: none; z-index: 1000; margin-bottom: 8px; }
-    .model-dropdown.active { display: block; animation: slideUp 0.2s ease; }
-    @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .model-dropdown { position: absolute; top: 110%; left: 0; min-width: 280px; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: var(--radius-md); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); overflow: hidden; display: none; z-index: 1000; }
+    .model-dropdown.active { display: block; animation: slideDown 0.2s ease; }
+    @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
     .model-option { padding: 0.85rem 1rem; cursor: pointer; transition: all 0.2s; border-bottom: 1px solid var(--border-color); }
     .model-option:last-child { border-bottom: none; }
     .model-option:hover { background: var(--bg-tertiary); }
@@ -97,8 +97,20 @@
     [data-theme="purple"] .message.user .message-content::before { content: ''; position: absolute; inset: -1px; background: var(--accent-gradient); border-radius: inherit; z-index: -1; opacity: 0.9; }
     .message-content p { margin: 0.5rem 0; } .message-content p:first-child { margin-top: 0; }
     .message-content code { font-family: 'JetBrains Mono', monospace; background: var(--bg-secondary); padding: 0.2rem 0.4rem; border-radius: 4px; font-size: 0.85em; color: var(--accent-primary); }
-    .message-content pre { background: var(--code-bg); padding: 0.85rem; border-radius: var(--radius-sm); overflow-x: auto; margin: 0.75rem 0; border: 1px solid var(--border-color); }
-    .message-content pre code { background: none; padding: 0; border: none; color: #e2e8f0; }
+    .message-content pre { margin: 0; }
+    
+    /* Code Block Canvas */
+    .code-block { margin: 0.75rem 0; border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--border-color); background: var(--code-bg); }
+    .code-header { display: flex; justify-content: space-between; align-items: center; background: var(--code-header, #0f172a); padding: 0.6rem 1rem; color: #94a3b8; font-size: 0.82rem; font-family: 'JetBrains Mono', monospace; border-bottom: 1px solid #334155; }
+    .code-lang { text-transform: uppercase; font-weight: 600; letter-spacing: 0.05em; }
+    .code-actions { display: flex; gap: 0.4rem; }
+    .code-btn { background: rgba(255,255,255,0.1); border: none; color: #94a3b8; padding: 0.35rem 0.7rem; border-radius: 6px; font-size: 0.78rem; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 0.3rem; font-family: 'Inter', sans-serif; }
+    .code-btn:hover { background: rgba(255,255,255,0.2); color: white; }
+    .code-btn.copied { background: #22c55e; color: white; }
+    .code-btn svg { width: 13px; height: 13px; }
+    .code-body { padding: 1rem; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 0.88rem; line-height: 1.6; color: #e2e8f0; background: var(--code-bg); }
+    .code-footer { display: flex; justify-content: flex-end; background: var(--code-header, #0f172a); padding: 0.5rem 0.8rem; border-top: 1px solid #334155; }
+    
     .message-actions { display: flex; gap: 0.5rem; margin-top: 0.5rem; opacity: 0; transition: opacity 0.2s; }
     .message:hover .message-actions { opacity: 1; }
     .action-btn { background: var(--bg-tertiary); border: 1px solid var(--border-color); color: var(--text-muted); padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; cursor: pointer; display: flex; align-items: center; gap: 0.25rem; }
@@ -115,13 +127,28 @@
     .send-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
     .input-hint { text-align: center; font-size: 0.75rem; color: var(--text-muted); margin-top: 0.5rem; }
 
+    /* Scroll to bottom */
+    .scroll-bottom-btn { position: fixed; bottom: 90px; right: 24px; background: var(--accent-gradient); color: white; width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.3); opacity: 0; transform: translateY(10px) scale(0.8); transition: all 0.3s; pointer-events: none; z-index: 50; }
+    .scroll-bottom-btn.visible { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
+    .scroll-bottom-btn:hover { transform: scale(1.1); }
+    .scroll-bottom-btn svg { width: 22px; height: 22px; }
+
     /* Modal */
     .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 2000; opacity: 0; visibility: hidden; transition: all 0.3s; backdrop-filter: blur(4px); }
     .modal-overlay.active { opacity: 1; visibility: visible; }
-    .modal { background: var(--bg-secondary); border-radius: var(--radius-lg); padding: 1.5rem; width: 90%; max-width: 400px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); transform: scale(0.95); transition: transform 0.3s; }
+    .modal { background: var(--bg-secondary); border-radius: var(--radius-lg); padding: 1.5rem; width: 90%; max-width: 420px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); transform: scale(0.95); transition: transform 0.3s; }
     .modal-overlay.active .modal { transform: scale(1); }
     .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color); }
     .modal-close { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1.5rem; }
+    .modal-input { width: 100%; padding: 0.75rem 1rem; background: var(--bg-tertiary); border: 2px solid var(--border-color); border-radius: var(--radius-md); color: var(--text-primary); font-size: 1rem; transition: all 0.2s; }
+    .modal-input:focus { outline: none; border-color: var(--accent-primary); }
+    .modal-actions { display: flex; gap: 0.75rem; margin-top: 1rem; }
+    .modal-btn { flex: 1; padding: 0.75rem; border-radius: var(--radius-md); font-weight: 600; cursor: pointer; transition: all 0.2s; border: none; font-size: 0.95rem; }
+    .modal-btn.primary { background: var(--accent-gradient); color: white; }
+    .modal-btn.primary:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(99,102,241,0.4); }
+    .modal-btn.secondary { background: var(--bg-tertiary); color: var(--text-primary); border: 1px solid var(--border-color); }
+    .modal-btn.secondary:hover { background: var(--bg-primary); }
+    
     .theme-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin-top: 0.5rem; }
     .theme-opt { padding: 0.6rem; border: 2px solid var(--border-color); border-radius: 8px; cursor: pointer; text-align: center; font-size: 0.85rem; transition: all 0.2s; }
     .theme-opt:hover { border-color: var(--accent-primary); }
@@ -134,6 +161,14 @@
     .cooldown-msg.show { display: block; animation: shake 0.5s; }
     @keyframes shake { 0%, 100% { transform: translateX(0); } 20% { transform: translateX(-5px); } 40% { transform: translateX(5px); } }
 
+    /* Emoji Rain */
+    .emoji-rain { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; overflow: hidden; }
+    .emoji-rain span { position: absolute; top: -40px; font-size: 2rem; animation: emojiDrop linear forwards; opacity: 0.9; }
+    @keyframes emojiDrop {
+      0% { transform: translateY(0) rotate(0deg); opacity: 0.9; }
+      100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+    }
+
     @media (max-width: 768px) {
       .sidebar { position: fixed; left: 0; top: 0; height: 100%; transform: translateX(-100%); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
       .sidebar.open { transform: translateX(0); }
@@ -145,7 +180,7 @@
 <body>
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
-      <button class="new-chat-btn" onclick="startNewChat()">
+      <button class="new-chat-btn" onclick="showNameChatModal()">
         <span>+</span> New Chat
       </button>
     </div>
@@ -196,6 +231,10 @@
       </div>
     </div>
 
+    <div class="scroll-bottom-btn" id="scrollBottomBtn" onclick="scrollToBottom()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 13l5 5 5-5M7 6l5 5 5-5"/></svg>
+    </div>
+
     <div class="input-area">
       <div class="input-wrapper">
         <div class="cooldown-msg" id="cooldownMsg">⚠️ Please wait <span id="cooldownTime">3</span>s</div>
@@ -210,6 +249,22 @@
     </div>
   </main>
 
+  <!-- Name Chat Modal -->
+  <div class="modal-overlay" id="nameChatModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>💬 Name Your Chat</h3>
+        <button class="modal-close" onclick="closeNameChatModal()">✕</button>
+      </div>
+      <input type="text" id="chatNameInput" class="modal-input" placeholder="e.g. Coding Help, Story Ideas..." maxlength="50">
+      <div class="modal-actions">
+        <button class="modal-btn secondary" onclick="closeNameChatModal()">Cancel</button>
+        <button class="modal-btn primary" onclick="confirmNewChat()">Create Chat</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings Modal -->
   <div class="modal-overlay" id="settingsModal">
     <div class="modal">
       <div class="modal-header">
@@ -224,7 +279,7 @@
           <div class="theme-opt purple" data-theme="purple" onclick="setTheme('purple')">🌌 Purple</div>
         </div>
       </div>
-      <button class="theme-opt" style="width:100%; margin-top:0.5rem" onclick="location.reload()">↻ Refresh Page</button>
+      <button class="modal-btn secondary" style="width:100%; margin-top:0.5rem" onclick="location.reload()">↻ Refresh Page</button>
     </div>
   </div>
 
@@ -255,6 +310,7 @@ document.addEventListener('DOMContentLoaded', () => {
 function setupEvents() {
   const input = document.getElementById('promptInput');
   const sendBtn = document.getElementById('sendBtn');
+  const chat = document.getElementById('chatContainer');
   
   input.addEventListener('input', () => {
     input.style.height = 'auto';
@@ -269,12 +325,19 @@ function setupEvents() {
     }
   });
   
+  // Scroll detection for bottom button
+  chat.addEventListener('scroll', () => {
+    const btn = document.getElementById('scrollBottomBtn');
+    const isAtBottom = chat.scrollHeight - chat.scrollTop - chat.clientHeight <= 100;
+    btn.classList.toggle('visible', !isAtBottom);
+  });
+  
   document.addEventListener('click', (e) => {
     if (!e.target.closest('.model-wrapper')) {
       document.getElementById('modelDropdown').classList.remove('active');
     }
     if (e.target.classList.contains('modal-overlay')) {
-      closeSettings();
+      e.target.classList.remove('active');
     }
   });
   
@@ -287,15 +350,36 @@ function setupEvents() {
       document.getElementById('modelDropdown').classList.remove('active');
     });
   });
+
+  // Enter to confirm chat name
+  document.getElementById('chatNameInput').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') confirmNewChat();
+  });
 }
 
-function startNewChat() {
-  const name = prompt('Enter chat name:', 'New Chat ' + (state.chats.length + 1));
-  if (!name || !name.trim()) return;
+// Chat naming modal
+function showNameChatModal() {
+  const modal = document.getElementById('nameChatModal');
+  modal.classList.add('active');
+  const input = document.getElementById('chatNameInput');
+  input.value = 'New Chat ' + (state.chats.length + 1);
+  input.focus();
+  input.select();
+  if (window.innerWidth <= 768) toggleSidebar();
+}
+
+function closeNameChatModal() {
+  document.getElementById('nameChatModal').classList.remove('active');
+}
+
+function confirmNewChat() {
+  const input = document.getElementById('chatNameInput');
+  const name = input.value.trim();
+  if (!name) { input.focus(); return; }
   
   const chat = {
     id: Date.now().toString(),
-    name: name.trim(),
+    name: name,
     messages: [],
     timestamp: new Date().toISOString()
   };
@@ -304,8 +388,7 @@ function startNewChat() {
   saveChats();
   renderChatHistory();
   loadChat(chat.id);
-  
-  if (window.innerWidth <= 768) toggleSidebar();
+  closeNameChatModal();
 }
 
 function renderChatHistory() {
@@ -365,7 +448,7 @@ function deleteChat(id) {
         <h2>👋 Welcome to KJ AI</h2>
         <div class="suggestions">
           <button class="suggestion-chip" onclick="useSuggestion('Explain quantum computing')">Quantum computing</button>
-          <button class="suggestion-chip" onclick="useSuggestion('Write a Python function to sort a list')">Python code</button>
+          <button class="suggestion-chip" onclick="useSuggestion('Write Python code')">Python code</button>
         </div>
       </div>
     `;
@@ -407,7 +490,6 @@ function sendMessage() {
   state.isGenerating = true;
   document.getElementById('promptInput').disabled = true;
   
-  // Save to current chat
   if (state.currentChatId) {
     const chat = state.chats.find(c => c.id === state.currentChatId);
     if (chat) {
@@ -443,7 +525,6 @@ function sendMessage() {
           document.getElementById('promptInput').disabled = false;
           document.getElementById('promptInput').focus();
           
-          // Save AI response
           if (state.currentChatId) {
             const chat = state.chats.find(c => c.id === state.currentChatId);
             if (chat) {
@@ -537,14 +618,19 @@ function addMessageActions(id) {
 
 function copyMsg(id) {
   const text = document.querySelector(`#${id} .message-content`).textContent;
-  navigator.clipboard.writeText(text);
-  alert('Copied!');
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.querySelector(`#${id} .action-btn`);
+    if (btn) {
+      const orig = btn.innerHTML;
+      btn.innerHTML = '✅ Copied';
+      setTimeout(() => { btn.innerHTML = orig; }, 2000);
+    }
+  });
 }
 
 function retryMsg(id) {
   const msg = document.querySelector(`#${id}`);
   if (msg) {
-    msg.style.opacity = '0.5';
     msg.remove();
     const prev = msg.previousElementSibling;
     if (prev && prev.classList.contains('user')) {
@@ -558,7 +644,37 @@ function retryMsg(id) {
 function parseMarkdown(text) {
   if (!text) return '';
   let h = text;
-  h = h.replace(/```(\w+)?\n([\s\S]*?)```/g, '<pre><code>$2</code></pre>');
+  
+  // Check for laughing emojis and trigger rain
+  const laughingEmojis = /😂|😆|🤣||😁|😄/g;
+  if (laughingEmojis.test(h)) {
+    triggerEmojiRain();
+  }
+  
+  // Code blocks
+  h = h.replace(/```(\w+)?\n?([\s\S]*?)```/g, (match, lang, code) => {
+    lang = lang || 'text';
+    const id = 'code-' + Math.random().toString(36).substr(2, 9);
+    return `<div class="code-block" id="${id}">
+      <div class="code-header">
+        <span class="code-lang">${lang}</span>
+        <div class="code-actions">
+          <button class="code-btn" onclick="copyCodeBlock('${id}')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+            Copy
+          </button>
+        </div>
+      </div>
+      <div class="code-body">${escapeHtml(code.trim())}</div>
+      <div class="code-footer">
+        <button class="code-btn" onclick="copyCodeBlock('${id}')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          Copy Code
+        </button>
+      </div>
+    </div>`;
+  });
+  
   h = h.replace(/`([^`]+)`/g, '<code>$1</code>');
   h = h.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
   h = h.replace(/\*(.+?)\*/g, '<em>$1</em>');
@@ -567,8 +683,53 @@ function parseMarkdown(text) {
   return '<p>' + h + '</p>';
 }
 
+function copyCodeBlock(id) {
+  const block = document.getElementById(id);
+  if (!block) return;
+  const code = block.querySelector('.code-body').textContent;
+  navigator.clipboard.writeText(code).then(() => {
+    block.querySelectorAll('.code-btn').forEach(btn => {
+      btn.classList.add('copied');
+      btn.innerHTML = '✅ Copied';
+      setTimeout(() => {
+        btn.classList.remove('copied');
+        const isHeader = btn.closest('.code-header');
+        btn.innerHTML = isHeader ? 
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copy' :
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copy Code';
+      }, 2000);
+    });
+  });
+}
+
+function triggerEmojiRain() {
+  const container = document.createElement('div');
+  container.className = 'emoji-rain';
+  document.body.appendChild(container);
+  
+  const emojis = ['😂', '🤣', '😆', '😁', '😹', '😄'];
+  const count = 30;
+  
+  for (let i = 0; i < count; i++) {
+    const span = document.createElement('span');
+    span.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+    span.style.left = Math.random() * 100 + 'vw';
+    span.style.animationDuration = (Math.random() * 1.5 + 1.5) + 's';
+    span.style.animationDelay = (Math.random() * 0.8) + 's';
+    span.style.fontSize = (Math.random() * 1.5 + 1.5) + 'rem';
+    container.appendChild(span);
+  }
+  
+  setTimeout(() => container.remove(), 3500);
+}
+
 function escapeHtml(t) { const d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
-function scrollToBottom() { const c = document.getElementById('chatContainer'); c.scrollTop = c.scrollHeight; }
+
+function scrollToBottom() { 
+  const c = document.getElementById('chatContainer'); 
+  c.scrollTo({ top: c.scrollHeight, behavior: 'smooth' });
+  document.getElementById('scrollBottomBtn').classList.remove('visible');
+}
 
 function useSuggestion(t) {
   const i = document.getElementById('promptInput');
