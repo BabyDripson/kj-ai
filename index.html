@@ -388,4 +388,327 @@ function setupScrollHandler() {
   const indicator = document.getElementById('scrollIndicator');
   chat.addEventListener('scroll', () => {
     const isAtBottom = chat.scrollHeight - chat.scrollTop - chat.clientHeight <= state.scrollThreshold;
-    if (!isAtBottom && state.isScrollLocked) { state.isScrollLocked = false; indicator.classList.add('
+    if (!isAtBottom && state.isScrollLocked) { state.isScrollLocked = false; indicator.classList.add('visible'); }
+    else if (isAtBottom && !state.isScrollLocked) { state.isScrollLocked = true; indicator.classList.remove('visible'); }
+  });
+}
+function scrollToBottom() {
+  const chat = document.getElementById('chatContainer');
+  chat.scrollTo({ top: chat.scrollHeight, behavior: state.animations ? 'smooth' : 'auto' });
+  state.isScrollLocked = true;
+  document.getElementById('scrollIndicator').classList.remove('visible');
+}
+
+function setupInputHandlers() {
+  const input = document.getElementById('promptInput');
+  const sendBtn = document.getElementById('sendBtn');
+  input.addEventListener('input', function() {
+    this.style.height = 'auto';
+    this.style.height = Math.min(this.scrollHeight, 150) + 'px';
+    sendBtn.disabled = !this.value.trim() && state.attachedFiles.length === 0;
+  });
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      if ((input.value.trim() || state.attachedFiles.length > 0) && !state.isGenerating) sendMessage();
+    }
+  });
+  sendBtn.disabled = true;
+}
+
+function setupModelDropdown() {
+  document.querySelectorAll('.model-option').forEach(option => {
+    option.addEventListener('click', () => {
+      state.model = option.dataset.model;
+      state.modelName = option.dataset.name;
+      document.getElementById('selectedModelName').textContent = state.modelName;
+      document.querySelectorAll('.model-option').forEach(o => o.classList.remove('active'));
+      option.classList.add('active');
+      toggleModelDropdown();
+    });
+  });
+}
+
+function toggleModelDropdown() {
+  document.getElementById('modelDropdown').classList.toggle('active');
+}
+
+function startNewChat() {
+  const chat = document.getElementById('chatContainer');
+  chat.innerHTML = `
+    <div class="welcome" id="welcomeScreen">
+      <h2>👋 Welcome to KJ AI</h2>
+      <div class="welcome-suggestions">
+        <button class="suggestion-chip" onclick="useSuggestion('Explain quantum computing simply')">Explain quantum computing</button>
+        <button class="suggestion-chip" onclick="useSuggestion('Write a Python function to sort a list')">Write Python code</button>
+        <button class="suggestion-chip" onclick="useSuggestion('Help me debug this JavaScript code')">Debug JS code</button>
+        <button class="suggestion-chip" onclick="useSuggestion('What are the best practices for React?')">React tips</button>
+      </div>
+    </div>
+  `;
+  state.messageQueue = [];
+  updateQueueIndicator();
+  clearFiles();
+  document.getElementById('promptInput').focus();
+}
+
+function handleFileSelect(event) {
+  const files = Array.from(event.target.files);
+  files.forEach(file => {
+    if (file.type.startsWith('image/') || file.type.startsWith('video/')) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        state.attachedFiles.push({ name: file.name, type: file.type, data: e.target.result });
+        updateFilePreview();
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+}
+
+function updateFilePreview() {
+  const preview = document.getElementById('filePreview');
+  preview.innerHTML = state.attachedFiles.map((file, i) => `
+    <div class="file-preview-item">
+      ${file.type.startsWith('image/') ? `<img src="${file.data}" alt="${file.name}">` : '🎬'}
+      <span>${file.name}</span>
+      <span class="remove-file" onclick="removeFile(${i})">✕</span>
+    </div>
+  `).join('');
+  document.getElementById('sendBtn').disabled = !document.getElementById('promptInput').value.trim() && state.attachedFiles.length === 0;
+}
+
+function removeFile(index) {
+  state.attachedFiles.splice(index, 1);
+  updateFilePreview();
+}
+
+function clearFiles() {
+  state.attachedFiles = [];
+  updateFilePreview();
+  document.getElementById('fileInput').value = '';
+}
+
+function parseMarkdown(text) {
+  if (!text) return '';
+  let html = text;
+  html = html.replace(/```(\w+)?\n([\s\S]*?)```/g, (m, lang, code) => {
+    lang = lang || 'text';
+    const id = 'code-' + Math.random().toString(36).substr(2, 9);
+    return `<div class="code-block" id="${id}"><div class="code-header"><span class="code-lang">${lang.toUpperCase()}</span><div class="code-actions"><button class="code-btn" onclick="copyCode('${id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>Copy</button></div></div><div class="code-body">${escapeHtml(code.trim())}</div><div class="code-footer"><button class="code-btn" onclick="copyCode('${id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>Copy Code</button></div></div>`;
+  });
+  html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+  html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
+  html = html.replace(/^### (.+)$/gm, '<h3>$1</h3>');
+  html = html.replace(/^\- (.+)$/gm, '<li>$1</li>');
+  html = html.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
+  html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>');
+  html = html.replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>');
+  return '<p>' + html + '</p>';
+}
+
+function escapeHtml(text) { if (!text) return ''; const d = document.createElement('div'); d.textContent = String(text); return d.innerHTML; }
+
+function copyCode(id) {
+  const block = document.getElementById(id); if (!block) return;
+  navigator.clipboard.writeText(block.querySelector('.code-body').textContent).then(() => {
+    block.querySelectorAll('.code-btn').forEach(btn => {
+      const orig = btn.innerHTML; btn.innerHTML = '✓ Copied!'; btn.style.color = '#22c55e';
+      setTimeout(() => { btn.innerHTML = orig; btn.style.color = ''; }, 2000);
+    });
+  });
+}
+
+function copyMessage(id) {
+  const msg = document.querySelector(`[data-message-id="${id}"] .message-content`); if (!msg) return;
+  navigator.clipboard.writeText(msg.textContent).then(() => {
+    const btn = document.querySelector(`[data-message-id="${id}"] .action-btn.copy`);
+    if (btn) { const o = btn.innerHTML; btn.innerHTML = '✓ Copied'; setTimeout(() => btn.innerHTML = o, 2000); }
+  });
+}
+
+function toggleLike(id) {
+  const btn = document.querySelector(`[data-message-id="${id}"] .action-btn.like`); if (!btn) return;
+  btn.classList.toggle('liked');
+  btn.innerHTML = btn.classList.contains('liked') ? '<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg> Liked!' : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg> Like';
+}
+
+async function retryMessage(id) {
+  const msg = document.querySelector(`[data-message-id="${id}"]`); if (!msg) return;
+  const prev = msg.previousElementSibling;
+  if (!prev || !prev.classList.contains('user')) return;
+  const prompt = prev.querySelector('.message-content').textContent;
+  msg.style.opacity = '0'; msg.style.transform = 'translateY(-10px)';
+  setTimeout(() => msg.remove(), 200);
+  await sendMessage(prompt);
+}
+
+async function sendMessage(promptToUse = null) {
+  const now = Date.now();
+  const timeSinceLastMessage = now - state.lastMessageTime;
+  
+  if (timeSinceLastMessage < state.cooldownPeriod && !promptToUse) {
+    const warning = document.getElementById('cooldownWarning');
+    const timer = document.getElementById('cooldownTimer');
+    const remaining = Math.ceil((state.cooldownPeriod - timeSinceLastMessage) / 1000);
+    timer.textContent = remaining;
+    warning.classList.add('show');
+    
+    let countdown = remaining;
+    const interval = setInterval(() => {
+      countdown--;
+      if (countdown <= 0) {
+        clearInterval(interval);
+        warning.classList.remove('show');
+      } else {
+        timer.textContent = countdown;
+      }
+    }, 1000);
+    
+    setTimeout(() => {
+      warning.classList.remove('show');
+      clearInterval(interval);
+    }, state.cooldownPeriod - timeSinceLastMessage);
+    return;
+  }
+  
+  state.lastMessageTime = now;
+  
+  const input = document.getElementById('promptInput');
+  const prompt = promptToUse || input.value.trim();
+  if (!prompt && state.attachedFiles.length === 0) return;
+  
+  const welcome = document.getElementById('welcomeScreen');
+  if (welcome) welcome.style.display = 'none';
+  
+  addMessage(prompt, 'user', state.attachedFiles);
+  if (!promptToUse) { input.value = ''; input.style.height = 'auto'; clearFiles(); }
+  
+  state.isScrollLocked = true;
+  document.getElementById('scrollIndicator').classList.remove('visible');
+  
+  const typingId = addMessage('<div class="typing-indicator"><span></span><span></span><span></span></div>', 'ai', true);
+  state.isGenerating = true;
+  
+  try {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt, model: state.model })
+    });
+    if (!res.ok) throw new Error(`Server error: ${res.status}`);
+    
+    removeMessage(typingId);
+    const aiId = addMessage('', 'ai', true);
+    const aiContent = document.querySelector(`[data-message-id="${aiId}"] .message-content`);
+    
+    let full = '';
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = '';
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split('\n');
+      buffer = lines.pop();
+      for (const line of lines) {
+        if (line.startsWith(' ')) {
+          const data = line.slice(6).trim();
+          if (data === '[DONE]') break;
+          try {
+            const p = JSON.parse(data);
+            const c = p.choices?.[0]?.delta?.content;
+            if (c) { full += c; aiContent.innerHTML = parseMarkdown(full); if (state.isScrollLocked) scrollToBottom(); }
+          } catch(e) {}
+        }
+      }
+    }
+    addMessageActions(aiId);
+  } catch (err) {
+    removeMessage(typingId);
+    addMessage(`❌ Error: ${err.message}`, 'ai');
+  } finally {
+    state.isGenerating = false;
+    input.focus();
+    processQueue();
+  }
+}
+
+function addMessage(text, sender, files = [], returnId = false) {
+  const chat = document.getElementById('chatContainer');
+  const id = 'msg-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+  const msg = document.createElement('div');
+  msg.className = `message ${sender}`;
+  msg.setAttribute('data-message-id', id);
+  
+  let content = sender === 'ai' ? parseMarkdown(text) : escapeHtml(text).replace(/\n/g, '<br>');
+  
+  if (files.length > 0) {
+    const fileHtml = files.map(f => {
+      if (f.type.startsWith('image/')) return `<img src="${f.data}" style="max-width:200px;border-radius:8px;margin-top:0.5rem;display:block">`;
+      if (f.type.startsWith('video/')) return `<video controls style="max-width:200px;border-radius:8px;margin-top:0.5rem;display:block"><source src="${f.data}"></video>`;
+      return `<div style="margin-top:0.5rem;padding:0.5rem;background:var(--bg-tertiary);border-radius:4px">📎 ${f.name}</div>`;
+    }).join('');
+    content += fileHtml;
+  }
+  
+  msg.innerHTML = `<div class="message-avatar">${sender === 'ai' ? '✦' : '👤'}</div><div class="message-wrapper"><div class="message-content">${content}</div></div>`;
+  chat.appendChild(msg);
+  scrollToBottom();
+  return returnId ? id : null;
+}
+
+function addMessageActions(id) {
+  const wrapper = document.querySelector(`[data-message-id="${id}"] .message-wrapper`); if (!wrapper) return;
+  const actions = document.createElement('div');
+  actions.className = 'message-actions';
+  actions.innerHTML = `
+    <button class="action-btn like" onclick="toggleLike('${id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg> Like</button>
+    <button class="action-btn retry" onclick="retryMessage('${id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg> Retry</button>
+    <button class="action-btn copy" onclick="copyMessage('${id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copy</button>`;
+  wrapper.appendChild(actions);
+}
+
+function removeMessage(id) {
+  const msg = document.querySelector(`[data-message-id="${id}"]`); if (!msg) return;
+  msg.style.opacity = '0'; msg.style.transform = 'translateY(-10px)';
+  setTimeout(() => msg.remove(), state.animations ? 200 : 0);
+}
+
+function useSuggestion(text) {
+  const input = document.getElementById('promptInput');
+  input.value = text; input.dispatchEvent(new Event('input')); input.focus();
+}
+
+function updateQueueIndicator() {
+  const indicator = document.getElementById('queueIndicator');
+  const text = document.getElementById('queueText');
+  if (state.messageQueue.length > 0) {
+    indicator.classList.add('show');
+    text.textContent = `${state.messageQueue.length} message${state.messageQueue.length > 1 ? 's' : ''} in queue`;
+  } else {
+    indicator.classList.remove('show');
+  }
+}
+
+function processQueue() {
+  if (state.messageQueue.length > 0) {
+    const nextPrompt = state.messageQueue.shift();
+    updateQueueIndicator();
+    setTimeout(() => sendMessage(nextPrompt), 500);
+  }
+}
+
+function openSettings() { document.getElementById('settingsModal').classList.add('active'); document.body.style.overflow = 'hidden'; }
+function closeSettings() { document.getElementById('settingsModal').classList.remove('active'); document.body.style.overflow = ''; }
+document.getElementById('settingsModal').addEventListener('click', (e) => { if (e.target.id === 'settingsModal') closeSettings(); });
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeSettings(); });
+
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+}
+</script>
+</body>
+</html>
