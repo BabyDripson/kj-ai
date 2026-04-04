@@ -54,11 +54,11 @@
     .top-bar { padding: 1rem 1.5rem; border-bottom: 1px solid var(--border-color); background: var(--bg-secondary); display: flex; justify-content: space-between; align-items: center; z-index: 10; }
     .mobile-menu-btn { display: none; background: none; border: none; color: var(--text-primary); cursor: pointer; padding: 0.5rem; }
     
-    /* Model Selector */
+    /* Model Selector - DROP UP */
     .model-wrapper { position: relative; }
     .model-btn { background: var(--bg-tertiary); border: 1px solid var(--border-color); color: var(--text-primary); padding: 0.6rem 1rem; border-radius: var(--radius-md); cursor: pointer; display: flex; align-items: center; gap: 0.5rem; font-weight: 500; transition: all 0.2s; }
     .model-btn:hover { border-color: var(--accent-primary); }
-    .model-dropdown { position: absolute; bottom: 110%; left: 0; right: 0; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: var(--radius-md); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); overflow: hidden; display: none; z-index: 1000; }
+    .model-dropdown { position: absolute; bottom: 120%; left: 0; right: 0; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: var(--radius-md); box-shadow: 0 -10px 15px -3px rgba(0,0,0,0.1); overflow: hidden; display: none; z-index: 1000; margin-bottom: 8px; }
     .model-dropdown.active { display: block; animation: slideUp 0.2s ease; }
     @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     .model-option { padding: 0.85rem 1rem; cursor: pointer; transition: all 0.2s; border-bottom: 1px solid var(--border-color); }
@@ -133,10 +133,6 @@
     .cooldown-msg { background: #f59e0b; color: white; padding: 0.5rem; border-radius: 6px; text-align: center; margin-bottom: 0.75rem; font-size: 0.85rem; display: none; }
     .cooldown-msg.show { display: block; animation: shake 0.5s; }
     @keyframes shake { 0%, 100% { transform: translateX(0); } 20% { transform: translateX(-5px); } 40% { transform: translateX(5px); } }
-
-    /* Chat Name Input */
-    .chat-name-input { background: var(--bg-tertiary); border: 1px solid var(--border-color); color: var(--text-primary); padding: 0.5rem; border-radius: var(--radius-sm); font-size: 0.9rem; width: 100%; }
-    .chat-name-input:focus { outline: none; border-color: var(--accent-primary); }
 
     @media (max-width: 768px) {
       .sidebar { position: fixed; left: 0; top: 0; height: 100%; transform: translateX(-100%); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
@@ -295,11 +291,11 @@ function setupEvents() {
 
 function startNewChat() {
   const name = prompt('Enter chat name:', 'New Chat ' + (state.chats.length + 1));
-  if (!name) return;
+  if (!name || !name.trim()) return;
   
   const chat = {
     id: Date.now().toString(),
-    name: name,
+    name: name.trim(),
     messages: [],
     timestamp: new Date().toISOString()
   };
@@ -314,6 +310,10 @@ function startNewChat() {
 
 function renderChatHistory() {
   const container = document.getElementById('chatHistory');
+  if (state.chats.length === 0) {
+    container.innerHTML = '<div style="color: var(--text-muted); text-align: center; padding: 2rem 1rem; font-size: 0.9rem;">No chats yet</div>';
+    return;
+  }
   container.innerHTML = state.chats.map(chat => `
     <div class="chat-item ${chat.id === state.currentChatId ? 'active' : ''}" onclick="loadChat('${chat.id}')">
       <span class="chat-item-title">${escapeHtml(chat.name)}</span>
@@ -330,14 +330,26 @@ function loadChat(id) {
   const container = document.getElementById('chatContainer');
   container.innerHTML = '';
   
-  chat.messages.forEach(msg => {
-    if (msg.role === 'user') {
-      addMessage(msg.content, 'user', false);
-    } else {
-      const msgId = addMessage(msg.content, 'ai', true);
-      addMessageActions(msgId);
-    }
-  });
+  if (chat.messages.length === 0) {
+    container.innerHTML = `
+      <div class="welcome" id="welcomeScreen">
+        <h2>👋 Welcome to KJ AI</h2>
+        <div class="suggestions">
+          <button class="suggestion-chip" onclick="useSuggestion('Explain quantum computing')">Quantum computing</button>
+          <button class="suggestion-chip" onclick="useSuggestion('Write a Python function to sort a list')">Python code</button>
+        </div>
+      </div>
+    `;
+  } else {
+    chat.messages.forEach(msg => {
+      if (msg.role === 'user') {
+        addMessage(msg.content, 'user', false);
+      } else {
+        const msgId = addMessage(msg.content, 'ai', true);
+        addMessageActions(msgId);
+      }
+    });
+  }
   
   renderChatHistory();
   scrollToBottom();
