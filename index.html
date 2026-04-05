@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>KJ AI • Collaborative AI Studio</title>
+  <title>KJ AI • Powered by Gengar</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
   
@@ -133,11 +133,25 @@
     .action-btn:hover { background: var(--accent-primary); color: white; }
 
     /* Thinking Indicator */
-    .thinking-indicator { display: inline-flex; align-items: center; gap: 0.4rem; color: var(--text-muted); font-size: 0.9rem; font-style: italic; }
-    .thinking-indicator .dots span { animation: thinkBounce 1.4s ease-in-out infinite both; display: inline-block; font-weight: bold; }
-    .thinking-indicator .dots span:nth-child(1) { animation-delay: -0.32s; }
-    .thinking-indicator .dots span:nth-child(2) { animation-delay: -0.16s; }
-    @keyframes thinkBounce { 0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; } 40% { transform: scale(1); opacity: 1; } }
+    .thinking-indicator { display: inline-flex; align-items: center; gap: 0.75rem; color: var(--text-muted); font-size: 0.9rem; font-style: italic; padding: 0.5rem 0; }
+    .thinking-text { font-weight: 500; }
+    
+    .thinking-bulb {
+      width: 20px; height: 20px;
+      background: #ffd700;
+      border-radius: 50%;
+      position: relative;
+      animation: glowPulse 1.5s infinite alternate;
+      box-shadow: 0 0 10px #ffd700;
+    }
+    .thinking-bulb::after {
+      content: ''; position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%);
+      width: 8px; height: 6px; background: var(--text-muted); border-radius: 2px;
+    }
+    @keyframes glowPulse {
+      0% { opacity: 0.6; transform: scale(0.9); box-shadow: 0 0 5px #ffd700; }
+      100% { opacity: 1; transform: scale(1.1); box-shadow: 0 0 15px #ffd700; }
+    }
 
     /* Input */
     .input-area { padding: 1rem 1.5rem; border-top: 1px solid var(--border-color); background: var(--bg-secondary); }
@@ -150,9 +164,18 @@
     .send-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
     .input-hint { text-align: center; font-size: 0.75rem; color: var(--text-muted); margin-top: 0.5rem; }
 
-    /* Scroll to bottom */
-    .scroll-bottom-btn { position: fixed; bottom: 90px; right: 24px; background: var(--accent-gradient); color: white; width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.3); opacity: 0; transform: translateY(10px) scale(0.8); transition: all 0.3s; pointer-events: none; z-index: 50; }
-    .scroll-bottom-btn.visible { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
+    /* Scroll to bottom - CENTERED */
+    .scroll-bottom-btn { 
+      position: fixed; bottom: 90px; left: 50%; 
+      background: var(--accent-gradient); color: white; width: 44px; height: 44px; 
+      border-radius: 50%; display: grid; place-items: center; cursor: pointer; 
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3); 
+      opacity: 0; transform: translateX(-50%) translateY(10px) scale(0.8); transition: all 0.3s; 
+      pointer-events: none; z-index: 50; 
+    }
+    .scroll-bottom-btn.visible { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); pointer-events: auto; }
+    .scroll-bottom-btn:hover { transform: translateX(-50%) scale(1.1); }
+    .scroll-bottom-btn svg { width: 22px; height: 22px; }
 
     /* Background Banner */
     .bg-banner { position: absolute; top: 0; left: 0; right: 0; background: #f59e0b; color: #fff; text-align: center; padding: 0.5rem; font-size: 0.85rem; font-weight: 500; z-index: 20; display: none; }
@@ -232,6 +255,24 @@
     <div class="top-bar">
       <button class="mobile-menu-btn" onclick="toggleSidebar()">☰</button>
       
+      <!-- Gengar Branding -->
+      <div style="display: flex; align-items: center; gap: 0.75rem;">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8 0-1.85.63-3.55 1.69-4.9L12 14l6.31-6.9C19.37 8.45 20 10.15 20 12c0 4.42-3.58 8-8 8z" fill="url(#grad1)"/>
+          <path d="M12 4c-1.66 0-3.32.34-4.57 1.02L12 10l4.57-4.98C15.32 4.34 13.66 4 12 4z" fill="#a78bfa"/>
+          <circle cx="9" cy="9" r="1.5" fill="#fff"/>
+          <circle cx="15" cy="9" r="1.5" fill="#fff"/>
+          <path d="M7 16c0 0 1.5 2 5 2s5-2 5-2" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
+          <defs>
+            <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#7c3aed;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#a78bfa;stop-opacity:1" />
+            </linearGradient>
+          </defs>
+        </svg>
+        <span style="font-weight: 700; font-size: 1.1rem; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">KJ AI</span>
+      </div>
+
       <div class="model-controls">
         <div class="model-wrapper">
           <button class="model-btn" onclick="toggleModelDropdown()">
@@ -766,7 +807,7 @@ async function sendSingleMessage(prompt) {
             const text = json.choices?.[0]?.delta?.content;
             if (text) {
               fullText += text;
-              contentEl.innerHTML = parseMarkdown(fullText);
+              contentEl.innerHTML = parseMarkdown(fullText, msgId);
               scrollToBottom();
             }
           } catch (e) {}
@@ -878,7 +919,7 @@ async function sendCollaborativeMessage(prompt) {
             const text = json.choices?.[0]?.delta?.content;
             if (text) {
               fullText += text;
-              contentEl.innerHTML = parseMarkdown(fullText);
+              contentEl.innerHTML = parseMarkdown(fullText, msgId);
               if (!contentEl.querySelector('.consensus-badge')) contentEl.prepend(badge);
               scrollToBottom();
             }
@@ -903,7 +944,7 @@ async function sendCollaborativeMessage(prompt) {
   }
 }
 
-// Thinking Message
+// Thinking Message with Lightbulb
 function addThinkingMessage(sender, avatar) {
   const chat = document.getElementById('chatContainer');
   const id = 'thinking-' + Date.now();
@@ -915,7 +956,10 @@ function addThinkingMessage(sender, avatar) {
     <div class="message-wrapper">
       <div class="message-sender">${escapeHtml(sender)} <span class="message-tag">thinking...</span></div>
       <div class="message-content">
-        <div class="thinking-indicator">Thinking<span class="dots"><span>.</span><span>.</span><span>.</span></span></div>
+        <div class="thinking-indicator">
+          <div class="thinking-bulb"></div>
+          <span class="thinking-text">Processing context & generating response...</span>
+        </div>
       </div>
     </div>
   `;
@@ -949,7 +993,7 @@ function addMessage(text, sender, avatar = null, returnId = false, senderName = 
     <div class="message-avatar">${modelAvatar}</div>
     <div class="message-wrapper">
       ${senderHtml}
-      <div class="message-content">${sender === 'ai' ? parseMarkdown(text) : escapeHtml(text).replace(/\n/g, '<br>')}</div>
+      <div class="message-content">${sender === 'ai' ? parseMarkdown(text, id) : escapeHtml(text).replace(/\n/g, '<br>')}</div>
     </div>
   `;
   
@@ -995,14 +1039,19 @@ function retryMsg(id) {
   }
 }
 
-// Markdown Parser with Strict Laugh Emoji Fix
-function parseMarkdown(text) {
+// Markdown Parser with Strict Laugh Emoji Fix (Once per message)
+function parseMarkdown(text, msgId = null) {
   if (!text) return '';
   let h = text;
   
-  // Strict laugh emoji check (only 😂 and 🤣)
-  if (/[😂🤣]/.test(h)) {
-    triggerEmojiRain();
+  // Strict laugh emoji check (ONLY 😂 and 🤣)
+  // We use dataset to ensure it only triggers ONCE per message, even during streaming
+  if (msgId) {
+    const el = document.getElementById(msgId);
+    if (el && !el.dataset.laughterTriggered && /[😂🤣]/.test(h)) {
+      triggerEmojiRain();
+      el.dataset.laughterTriggered = 'true';
+    }
   }
   
   // Code blocks
@@ -1102,7 +1151,7 @@ function triggerEmojiRain() {
   container.className = 'emoji-rain';
   document.body.appendChild(container);
   
-  const emojis = ['😂', '🤣'];
+  const emojis = ['😂', ''];
   for (let i = 0; i < 25; i++) {
     const span = document.createElement('span');
     span.textContent = emojis[Math.floor(Math.random() * emojis.length)];
