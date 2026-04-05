@@ -117,7 +117,7 @@
     .model-wrapper { position: relative; }
     .model-btn { background: var(--bg-tertiary); border: 1px solid var(--border-color); color: var(--text-primary); padding: 0.6rem 1rem; border-radius: var(--radius-md); cursor: pointer; display: flex; align-items: center; gap: 0.5rem; font-weight: 500; transition: all 0.2s; white-space: nowrap; }
     .model-btn:hover { border-color: var(--accent-primary); }
-    .model-dropdown { position: absolute; top: 110%; left: 0; min-width: 300px; max-height: 400px; overflow-y: auto; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: var(--radius-md); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); overflow: hidden; display: none; z-index: 1000; }
+    .model-dropdown { position: absolute; top: 110%; left: 0; min-width: 320px; max-height: 450px; overflow-y: auto; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: var(--radius-md); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); display: none; z-index: 1000; }
     .model-dropdown.active { display: block; animation: slideDown 0.2s ease; }
     @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
     .model-option { padding: 0.85rem 1rem; cursor: pointer; transition: all 0.2s; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; gap: 0.75rem; }
@@ -129,6 +129,10 @@
     .model-name { font-weight: 600; margin-bottom: 0.15rem; font-size: 0.9rem; }
     .model-desc { font-size: 0.75rem; color: var(--text-muted); }
     .model-option.active .model-desc { color: rgba(255,255,255,0.8); }
+    .model-dropdown::-webkit-scrollbar { width: 8px; }
+    .model-dropdown::-webkit-scrollbar-track { background: var(--bg-tertiary); border-radius: 4px; }
+    .model-dropdown::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
+    .model-dropdown::-webkit-scrollbar-thumb:hover { background: var(--accent-primary); }
 
     .collab-toggle { display: flex; align-items: center; gap: 0.5rem; background: var(--bg-tertiary); border: 1px solid var(--border-color); padding: 0.5rem 0.85rem; border-radius: var(--radius-md); cursor: pointer; transition: all 0.2s; white-space: nowrap; }
     .collab-toggle:hover { border-color: var(--accent-primary); }
@@ -178,6 +182,13 @@
       box-shadow: 0 2px 8px rgba(0,0,0,0.2);
     }
     .message-wrapper:hover .copy-overlay { opacity: 1; pointer-events: auto; }
+    
+    /* Response Navigation */
+    .response-nav { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.5rem; justify-content: center; }
+    .response-nav-btn { background: var(--bg-tertiary); border: 1px solid var(--border-color); color: var(--text-muted); width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; cursor: pointer; transition: all 0.2s; font-size: 0.8rem; }
+    .response-nav-btn:hover:not(:disabled) { background: var(--accent-primary); color: white; border-color: var(--accent-primary); }
+    .response-nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+    .response-nav-counter { font-size: 0.8rem; color: var(--text-muted); font-weight: 500; }
     
     /* Simplified Code Block */
     .code-block { margin: 0.75rem 0; border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--border-color); background: var(--code-bg); }
@@ -265,11 +276,12 @@
     .modal-btn.danger { background: #ef4444; color: white; }
     
     .theme-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin-top: 0.5rem; }
-    .theme-opt { padding: 0.6rem; border: 2px solid var(--border-color); border-radius: 8px; cursor: pointer; text-align: center; font-size: 0.85rem; transition: all 0.2s; }
+    .theme-opt { padding: 0.6rem; border: 2px solid var(--border-color); border-radius: 8px; cursor: pointer; text-align: center; font-size: 0.85rem; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.4rem; }
     .theme-opt:hover { border-color: var(--accent-primary); }
     .theme-opt.active { border-color: var(--accent-primary); background: var(--accent-gradient); color: white; }
     .theme-opt.purple { background: linear-gradient(135deg, #1f1335, #2d1b4e); color: #c4b5fd; }
     .theme-opt.purple.active { border-color: #a78bfa; box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.3); }
+    .theme-opt svg { width: 16px; height: 16px; }
     
     .cooldown-msg { background: #f59e0b; color: white; padding: 0.5rem; border-radius: 6px; text-align: center; margin-bottom: 0.75rem; font-size: 0.85rem; display: none; }
     .cooldown-msg.show { display: block; animation: shake 0.5s; }
@@ -331,7 +343,7 @@
       
       <!-- Gengar Logo -->
       <div style="display: flex; align-items: center; gap: 0.75rem;">
-        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/94.png" alt="Gengar" style="width: 32px; height: 32px; image-rendering: pixelated;">
+        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/94.png" alt="Gengar" style="width: 48px; height: 48px; image-rendering: auto; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));">
         <span style="font-weight: 700; font-size: 1.1rem; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">KJ AI</span>
       </div>
 
@@ -504,15 +516,42 @@
       <div style="margin-bottom: 1rem;">
         <div style="font-weight: 500; margin-bottom: 0.5rem;">Theme</div>
         <div class="theme-grid">
-          <div class="theme-opt active" data-theme="light" onclick="setTheme('light')">Light</div>
-          <div class="theme-opt" data-theme="dark" onclick="setTheme('dark')">Dark</div>
-          <div class="theme-opt purple" data-theme="purple" onclick="setTheme('purple')">Purple</div>
-          <div class="theme-opt" data-theme="sakura" onclick="setTheme('sakura')">Sakura</div>
-          <div class="theme-opt" data-theme="radioactive" onclick="setTheme('radioactive')">Radioactive</div>
-          <div class="theme-opt" data-theme="cursed" onclick="setTheme('cursed')">Cursed</div>
-          <div class="theme-opt" data-theme="divine" onclick="setTheme('divine')">Divine</div>
-          <div class="theme-opt" data-theme="yinyang" onclick="setTheme('yinyang')">Yin Yang</div>
-          <div class="theme-opt" data-theme="spooky" onclick="setTheme('spooky')">Spooky</div>
+          <div class="theme-opt active" data-theme="light" onclick="setTheme('light')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+            Light
+          </div>
+          <div class="theme-opt" data-theme="dark" onclick="setTheme('dark')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            Dark
+          </div>
+          <div class="theme-opt purple" data-theme="purple" onclick="setTheme('purple')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10H12V2z"/><path d="M12 2a10 10 0 0 1 10 10h-10V2z"/></svg>
+            Purple
+          </div>
+          <div class="theme-opt" data-theme="sakura" onclick="setTheme('sakura')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8 0-1.85.63-3.55 1.69-4.9L12 14l6.31-6.9C19.37 8.45 20 10.15 20 12c0 4.42-3.58 8-8 8z"/></svg>
+            Sakura
+          </div>
+          <div class="theme-opt" data-theme="radioactive" onclick="setTheme('radioactive')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2v20M2 12h20"/></svg>
+            Radioactive
+          </div>
+          <div class="theme-opt" data-theme="cursed" onclick="setTheme('cursed')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8 0-1.85.63-3.55 1.69-4.9L12 14l6.31-6.9C19.37 8.45 20 10.15 20 12c0 4.42-3.58 8-8 8z"/></svg>
+            Cursed
+          </div>
+          <div class="theme-opt" data-theme="divine" onclick="setTheme('divine')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 10 10h-10V2z"/></svg>
+            Divine
+          </div>
+          <div class="theme-opt" data-theme="yinyang" onclick="setTheme('yinyang')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 10 10h-10V2z"/></svg>
+            Yin Yang
+          </div>
+          <div class="theme-opt" data-theme="spooky" onclick="setTheme('spooky')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8 0-1.85.63-3.55 1.69-4.9L12 14l6.31-6.9C19.37 8.45 20 10.15 20 12c0 4.42-3.58 8-8 8z"/></svg>
+            Spooky
+          </div>
         </div>
       </div>
       <button class="modal-btn secondary" style="width:100%; margin-top:0.5rem" onclick="location.reload()">Refresh Page</button>
@@ -551,7 +590,9 @@ const state = {
   pausedForBackground: false,
   generationQueue: [],
   pendingPrompts: [],
-  currentController: null
+  currentController: null,
+  responseHistory: {}, // Maps messageId to array of responses
+  currentResponseIndex: {} // Maps messageId to current response index
 };
 
 // INIT
@@ -632,7 +673,7 @@ function setupEvents() {
     }
   });
 
-  // Tab close handling
+  // Tab close handling - properly abort requests
   window.addEventListener('beforeunload', () => {
     if (state.currentController) {
       state.currentController.abort();
@@ -902,6 +943,12 @@ async function sendSingleMessage(prompt) {
     const msgId = addMessage('', 'ai', 'ai', true, state.modelName);
     const contentEl = document.querySelector(`#${msgId} .message-content`);
     
+    // Initialize response history for this message
+    if (!state.responseHistory[msgId]) {
+      state.responseHistory[msgId] = [];
+      state.currentResponseIndex[msgId] = 0;
+    }
+    
     const reader = res.body.getReader();
     const decoder = new TextDecoder();
     let buffer = '';
@@ -936,7 +983,12 @@ async function sendSingleMessage(prompt) {
       }
     }
     
+    // Add to response history
+    state.responseHistory[msgId].push(fullText);
+    state.currentResponseIndex[msgId] = state.responseHistory[msgId].length - 1;
+    
     addMessageActions(msgId);
+    addResponseNavigation(msgId);
     
     if (state.currentChatId) {
       const chat = state.chats.find(c => c.id === state.currentChatId);
@@ -1180,6 +1232,60 @@ function addMessageActions(id) {
     <button class="action-btn" onclick="retryMsg('${id}')">Retry</button>
   `;
   wrapper.appendChild(actions);
+}
+
+function addResponseNavigation(msgId) {
+  const wrapper = document.querySelector(`#${msgId} .message-wrapper`);
+  if (!wrapper) return;
+  
+  const nav = document.createElement('div');
+  nav.className = 'response-nav';
+  nav.id = `nav-${msgId}`;
+  nav.innerHTML = `
+    <button class="response-nav-btn" onclick="prevResponse('${msgId}')" id="prev-${msgId}" disabled>
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+    <span class="response-nav-counter" id="counter-${msgId}">1/1</span>
+    <button class="response-nav-btn" onclick="nextResponse('${msgId}')" id="next-${msgId}" disabled>
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+    </button>
+  `;
+  wrapper.appendChild(nav);
+}
+
+function updateResponseNavigation(msgId) {
+  const responses = state.responseHistory[msgId] || [];
+  const currentIndex = state.currentResponseIndex[msgId] || 0;
+  
+  const prevBtn = document.getElementById(`prev-${msgId}`);
+  const nextBtn = document.getElementById(`next-${msgId}`);
+  const counter = document.getElementById(`counter-${msgId}`);
+  
+  if (prevBtn) prevBtn.disabled = currentIndex <= 0;
+  if (nextBtn) nextBtn.disabled = currentIndex >= responses.length - 1;
+  if (counter) counter.textContent = `${currentIndex + 1}/${responses.length}`;
+}
+
+function showResponse(msgId, index) {
+  const responses = state.responseHistory[msgId] || [];
+  if (index < 0 || index >= responses.length) return;
+  
+  state.currentResponseIndex[msgId] = index;
+  const contentEl = document.querySelector(`#${msgId} .message-content`);
+  if (contentEl) {
+    contentEl.innerHTML = parseMarkdown(responses[index], msgId);
+  }
+  updateResponseNavigation(msgId);
+}
+
+function prevResponse(msgId) {
+  const currentIndex = state.currentResponseIndex[msgId] || 0;
+  showResponse(msgId, currentIndex - 1);
+}
+
+function nextResponse(msgId) {
+  const currentIndex = state.currentResponseIndex[msgId] || 0;
+  showResponse(msgId, currentIndex + 1);
 }
 
 function copyMsg(id) {
