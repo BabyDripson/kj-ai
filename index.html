@@ -353,25 +353,25 @@
             <span id="selectedModelIcon" class="model-icon">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10H12V2z"/><path d="M12 2a10 10 0 0 1 10 10h-10V2z"/></svg>
             </span>
-            <span id="selectedModelName">Llama 3.3 Free</span> ▾
+            <span id="selectedModelName">Qwen 3.6 Plus Free</span> ▾
           </button>
           <div class="model-dropdown" id="modelDropdown">
-            <div class="model-option active" data-model="meta-llama/llama-3.3-70b-instruct:free" data-name="Llama 3.3 Free" data-desc="Best Free Model • 128K context">
+            <div class="model-option active" data-model="qwen/qwen3.6-plus:free" data-name="Qwen 3.6 Plus Free" data-desc="Best Free Model • 1M context">
               <div class="model-icon">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10H12V2z"/><path d="M12 2a10 10 0 0 1 10 10h-10V2z"/></svg>
               </div>
               <div class="model-info">
-                <div class="model-name">Llama 3.3 Free</div>
-                <div class="model-desc">Best Free Model • 128K context</div>
+                <div class="model-name">Qwen 3.6 Plus Free</div>
+                <div class="model-desc">Best Free Model • 1M context</div>
               </div>
             </div>
-            <div class="model-option" data-model="qwen/qwen3.5-plus:free" data-name="Qwen 3.5 Plus Free" data-desc="Strong Coding • 1M context">
+            <div class="model-option" data-model="meta-llama/llama-3.3-70b-instruct:free" data-name="Llama 3.3 Free" data-desc="Great All-Rounder • 128K context">
               <div class="model-icon">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 10 10h-10V2z"/></svg>
               </div>
               <div class="model-info">
-                <div class="model-name">Qwen 3.5 Plus Free</div>
-                <div class="model-desc">Strong Coding • 1M context</div>
+                <div class="model-name">Llama 3.3 Free</div>
+                <div class="model-desc">Great All-Rounder • 128K context</div>
               </div>
             </div>
             <div class="model-option" data-model="mistralai/mistral-small-24b-instruct-2501:free" data-name="Mistral Small Free" data-desc="Fast & Efficient • 32K context">
@@ -408,15 +408,6 @@
               <div class="model-info">
                 <div class="model-name">Gemma 3 1B Free</div>
                 <div class="model-desc">Lightweight & Fast</div>
-              </div>
-            </div>
-            <div class="model-option" data-model="anthropic/claude-3-haiku" data-name="Claude 3 Haiku" data-desc="Fastest Claude (Paid/Limited)">
-              <div class="model-icon">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10H12V2z"/><path d="M12 2a10 10 0 0 1 10 10h-10V2z"/></svg>
-              </div>
-              <div class="model-info">
-                <div class="model-name">Claude 3 Haiku</div>
-                <div class="model-desc">Fastest Claude (Paid/Limited)</div>
               </div>
             </div>
           </div>
@@ -564,19 +555,18 @@ const API_URL = 'https://kj-ai-proxy.babydripson.workers.dev';
 
 // Model definitions
 const MODELS = [
-  { id: 'meta-llama/llama-3.3-70b-instruct:free', name: 'Llama 3.3 Free', desc: 'Best Free Model' },
-  { id: 'qwen/qwen3.5-plus:free', name: 'Qwen 3.5 Plus Free', desc: 'Strong Coding' },
+  { id: 'qwen/qwen3.6-plus:free', name: 'Qwen 3.6 Plus Free', desc: 'Best Free Model' },
+  { id: 'meta-llama/llama-3.3-70b-instruct:free', name: 'Llama 3.3 Free', desc: 'Great All-Rounder' },
   { id: 'mistralai/mistral-small-24b-instruct-2501:free', name: 'Mistral Small Free', desc: 'Fast & Efficient' },
   { id: 'nvidia/nemotron-3-super-120b-a12b:free', name: 'Nemotron 3 Super Free', desc: 'Multi-Agent' },
   { id: 'stepfun/step-3.5-flash:free', name: 'Step 3.5 Flash Free', desc: 'Ultra-Fast Reasoning' },
-  { id: 'google/gemma-3-1b-it:free', name: 'Gemma 3 1B Free', desc: 'Lightweight & Fast' },
-  { id: 'anthropic/claude-3-haiku', name: 'Claude 3 Haiku', desc: 'Fastest Claude (Paid/Limited)' }
+  { id: 'google/gemma-3-1b-it:free', name: 'Gemma 3 1B Free', desc: 'Lightweight & Fast' }
 ];
 
 // STATE
 const state = {
-  model: 'meta-llama/llama-3.3-70b-instruct:free',
-  modelName: 'Llama 3.3 Free',
+  model: 'qwen/qwen3.6-plus:free',
+  modelName: 'Qwen 3.6 Plus Free',
   theme: localStorage.getItem('kjai-theme') || 'purple',
   isGenerating: false,
   lastMsgTime: 0,
@@ -591,8 +581,8 @@ const state = {
   generationQueue: [],
   pendingPrompts: [],
   currentController: null,
-  responseHistory: {}, // Maps messageId to array of responses
-  currentResponseIndex: {} // Maps messageId to current response index
+  responseHistory: {},
+  currentResponseIndex: {}
 };
 
 // INIT
@@ -673,7 +663,7 @@ function setupEvents() {
     }
   });
 
-  // Tab close handling - properly abort requests
+  // Tab close handling
   window.addEventListener('beforeunload', () => {
     if (state.currentController) {
       state.currentController.abort();
@@ -943,7 +933,6 @@ async function sendSingleMessage(prompt) {
     const msgId = addMessage('', 'ai', 'ai', true, state.modelName);
     const contentEl = document.querySelector(`#${msgId} .message-content`);
     
-    // Initialize response history for this message
     if (!state.responseHistory[msgId]) {
       state.responseHistory[msgId] = [];
       state.currentResponseIndex[msgId] = 0;
@@ -967,8 +956,9 @@ async function sendSingleMessage(prompt) {
       buffer = lines.pop();
       
       for (const line of lines) {
-        if (line.trim().startsWith(' ')) {
-          const data = line.trim().slice(6);
+        // FIXED: Look for 'data: ' instead of ' '
+        if (line.startsWith('data: ')) {
+          const data = line.slice(6);
           if (data === '[DONE]') continue;
           try {
             const json = JSON.parse(data);
@@ -983,7 +973,10 @@ async function sendSingleMessage(prompt) {
       }
     }
     
-    // Add to response history
+    if (!fullText.trim()) {
+      contentEl.innerHTML = '<em style="color: var(--text-muted);">No response generated.</em>';
+    }
+    
     state.responseHistory[msgId].push(fullText);
     state.currentResponseIndex[msgId] = state.responseHistory[msgId].length - 1;
     
@@ -1035,8 +1028,8 @@ async function sendCollaborativeMessage(prompt) {
         let modelResponse = '';
         const lines = text.split('\n');
         for (const line of lines) {
-          if (line.trim().startsWith(' ')) {
-            const data = line.trim().slice(6);
+          if (line.startsWith('data: ')) {
+            const data = line.slice(6);
             if (data === '[DONE]') continue;
             try {
               const json = JSON.parse(data);
@@ -1110,8 +1103,8 @@ Be constructive and concise.`;
       buffer = lines.pop();
       
       for (const line of lines) {
-        if (line.trim().startsWith(' ')) {
-          const data = line.trim().slice(6);
+        if (line.startsWith('data: ')) {
+          const data = line.slice(6);
           if (data === '[DONE]') continue;
           try {
             const json = JSON.parse(data);
@@ -1313,7 +1306,7 @@ function retryMsg(id) {
   }
 }
 
-// Markdown Parser with Strict Laugh Emoji Fix (Once per message)
+// Markdown Parser with Strict Laugh Emoji Fix
 function parseMarkdown(text, msgId = null) {
   if (!text) return '';
   let h = text;
