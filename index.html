@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>KJ AI • Powered by Gengar</title>
+  <title>KJ AI • Collaborative Studio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400&family=Noto+Serif+JP:wght@400;700&family=Special+Elite&family=Cinzel:wght@400;700&family=Noto+Serif+SC:wght@400;700&family=Creepster&family=Rubik+Glitch&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
   
   <style>
     :root {
@@ -15,8 +15,10 @@
       --user-bubble: #6366f1; --user-text: #ffffff; --ai-bubble: #f8fafc; --ai-text: #0f172a;
       --error-bubble: #fef2f2; --error-text: #dc2626;
       --code-bg: #1e293b; --radius-sm: 8px; --radius-md: 12px; --radius-lg: 20px; --radius-full: 9999px;
-      --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      --sidebar-width: 280px;
+      --transition: 0.2s ease;
+      --sidebar-width: 260px;
+      --font-main: 'Inter', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
     }
     [data-theme="dark"] {
       --bg-primary: #0f172a; --bg-secondary: #1e293b; --bg-tertiary: #334155;
@@ -30,63 +32,63 @@
       --border-color: #4c3d7a; --accent-primary: #a78bfa; --accent-gradient: linear-gradient(135deg, #7c3aed, #a78bfa);
       --user-bubble: linear-gradient(135deg, #7c3aed, #a78bfa); --user-text: #ffffff; --ai-bubble: #1f1335; --ai-text: #ffffff;
       --error-bubble: #2a0a12; --error-text: #f87171; --code-bg: #0f0824;
-      --shadow-glow: 0 0 30px -5px rgba(167, 139, 250, 0.4);
+      --shadow-glow: 0 0 20px rgba(167, 139, 250, 0.3);
     }
-    /* Sakura Theme */
     [data-theme="sakura"] {
       --bg-primary: #fff0f5; --bg-secondary: #ffe4ec; --bg-tertiary: #ffcce0;
       --text-primary: #8b4513; --text-secondary: #a0522d; --text-muted: #d2691e;
       --border-color: #ffb6c1; --accent-primary: #ff69b4; --accent-gradient: linear-gradient(135deg, #ff69b4, #ff1493);
       --user-bubble: linear-gradient(135deg, #ff69b4, #ff1493); --user-text: #ffffff; --ai-bubble: #fff0f5; --ai-text: #8b4513;
       --error-bubble: #ffe4e1; --error-text: #dc143c; --code-bg: #fff5ee;
+      --font-main: 'Noto Serif JP', serif;
       --shadow-glow: 0 0 20px rgba(255, 105, 180, 0.3);
     }
-    /* Radioactive Theme */
     [data-theme="radioactive"] {
       --bg-primary: #0a0f0a; --bg-secondary: #0f1f0f; --bg-tertiary: #1a2f1a;
       --text-primary: #39ff14; --text-secondary: #7fff00; --text-muted: #adff2f;
       --border-color: #2f4f2f; --accent-primary: #39ff14; --accent-gradient: linear-gradient(135deg, #39ff14, #7fff00);
       --user-bubble: linear-gradient(135deg, #39ff14, #7fff00); --user-text: #000000; --ai-bubble: #0f1f0f; --ai-text: #39ff14;
       --error-bubble: #1f0f0f; --error-text: #ff3914; --code-bg: #051005;
+      --font-main: 'JetBrains Mono', monospace;
       --shadow-glow: 0 0 20px rgba(57, 255, 20, 0.4);
     }
-    /* Cursed Theme */
     [data-theme="cursed"] {
       --bg-primary: #1a0000; --bg-secondary: #2f0000; --bg-tertiary: #4f0000;
       --text-primary: #ff4500; --text-secondary: #ff6347; --text-muted: #ff7f50;
       --border-color: #4f0000; --accent-primary: #ff4500; --accent-gradient: linear-gradient(135deg, #ff4500, #dc143c);
       --user-bubble: linear-gradient(135deg, #ff4500, #dc143c); --user-text: #ffffff; --ai-bubble: #2f0000; --ai-text: #ff4500;
       --error-bubble: #3f0000; --error-text: #ff0000; --code-bg: #0f0000;
+      --font-main: 'Special Elite', cursive;
       --shadow-glow: 0 0 20px rgba(255, 69, 0, 0.4);
     }
-    /* Divine Theme */
     [data-theme="divine"] {
       --bg-primary: #faf8f0; --bg-secondary: #fff8dc; --bg-tertiary: #fffacd;
       --text-primary: #ffd700; --text-secondary: #daa520; --text-muted: #b8860b;
       --border-color: #f0e68c; --accent-primary: #ffd700; --accent-gradient: linear-gradient(135deg, #ffd700, #fffacd);
       --user-bubble: linear-gradient(135deg, #ffd700, #fffacd); --user-text: #8b4513; --ai-bubble: #fff8dc; --ai-text: #ffd700;
       --error-bubble: #fff0f5; --error-text: #dc143c; --code-bg: #fffff0;
+      --font-main: 'Cinzel', serif;
       --shadow-glow: 0 0 30px rgba(255, 215, 0, 0.5);
     }
-    /* Yin Yang Theme */
     [data-theme="yinyang"] {
       --bg-primary: #ffffff; --bg-secondary: #f5f5f5; --bg-tertiary: #e8e8e8;
       --text-primary: #000000; --text-secondary: #333333; --text-muted: #666666;
       --border-color: #cccccc; --accent-primary: #000000; --accent-gradient: linear-gradient(135deg, #000000, #ffffff);
       --user-bubble: #000000; --user-text: #ffffff; --ai-bubble: #ffffff; --ai-text: #000000;
       --error-bubble: #ffebee; --error-text: #c62828; --code-bg: #f5f5f5;
+      --font-main: 'Noto Serif SC', serif;
     }
-    /* Spooky Theme */
     [data-theme="spooky"] {
       --bg-primary: #1a0f2e; --bg-secondary: #2d1f4e; --bg-tertiary: #3d2f5e;
       --text-primary: #ff9500; --text-secondary: #ffb347; --text-muted: #cc7722;
       --border-color: #4a3f5e; --accent-primary: #ff6600; --accent-gradient: linear-gradient(135deg, #ff6600, #9932cc);
       --user-bubble: linear-gradient(135deg, #ff6600, #9932cc); --user-text: #ffffff; --ai-bubble: #2d1f4e; --ai-text: #ff9500;
       --error-bubble: #3f0f0f; --error-text: #ff3300; --code-bg: #1f0f2e;
+      --font-main: 'Creepster', cursive;
       --shadow-glow: 0 0 20px rgba(255, 102, 0, 0.4);
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Inter', sans-serif; background: var(--bg-primary); color: var(--text-primary); line-height: 1.6; height: 100vh; display: flex; overflow: hidden; transition: background var(--transition), color var(--transition); }
+    body { font-family: var(--font-main); background: var(--bg-primary); color: var(--text-primary); line-height: 1.6; height: 100vh; display: flex; overflow: hidden; transition: background var(--transition), color var(--transition); }
     
     /* Sidebar */
     .sidebar { width: var(--sidebar-width); background: var(--bg-secondary); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; z-index: 100; transition: transform var(--transition); }
@@ -122,8 +124,7 @@
     .model-option:last-child { border-bottom: none; }
     .model-option:hover { background: var(--bg-tertiary); }
     .model-option.active { background: var(--accent-gradient); color: white; }
-    .model-avatar { font-size: 1.4rem; width: 32px; height: 32px; display: grid; place-items: center; background: var(--bg-tertiary); border-radius: var(--radius-sm); }
-    .model-option.active .model-avatar { background: rgba(255,255,255,0.2); }
+    .model-icon { width: 24px; height: 24px; display: grid; place-items: center; }
     .model-info { flex: 1; }
     .model-name { font-weight: 600; margin-bottom: 0.15rem; font-size: 0.9rem; }
     .model-desc { font-size: 0.75rem; color: var(--text-muted); }
@@ -137,7 +138,6 @@
 
     /* Chat */
     .chat-container { flex: 1; overflow-y: auto; padding: 1.5rem; position: relative; }
-    [data-theme="purple"] .chat-container::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 20% 80%, rgba(124, 58, 237, 0.15), transparent 50%), radial-gradient(ellipse at 80% 20%, rgba(167, 139, 250, 0.1), transparent 50%); pointer-events: none; z-index: 0; }
     .chat-container > * { position: relative; z-index: 1; }
     .chat-container::-webkit-scrollbar { width: 6px; }
     .chat-container::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 3px; }
@@ -155,7 +155,8 @@
     .message.user { margin-left: auto; flex-direction: row-reverse; }
     .message.ai { margin-right: auto; }
     .message.error { margin-left: auto; flex-direction: row-reverse; }
-    .message-avatar { width: 36px; height: 36px; border-radius: var(--radius-sm); display: grid; place-items: center; font-size: 1.2rem; flex-shrink: 0; background: var(--bg-tertiary); border: 1px solid var(--border-color); }
+    .message-avatar { width: 36px; height: 36px; border-radius: var(--radius-sm); display: grid; place-items: center; flex-shrink: 0; background: var(--bg-tertiary); border: 1px solid var(--border-color); }
+    .message-avatar svg { width: 20px; height: 20px; }
     .message-wrapper { flex: 1; min-width: 0; max-width: 75vw; }
     .message-content-wrapper { position: relative; }
     .message-sender { font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 0.25rem; display: flex; align-items: center; gap: 0.5rem; }
@@ -164,54 +165,41 @@
     .message.ai .message-content { background: var(--ai-bubble); border-bottom-left-radius: 4px; border: 1px solid var(--border-color); }
     .message.user .message-content { background: var(--user-bubble); color: var(--user-text); border-bottom-right-radius: 4px; }
     .message.error .message-content { background: var(--error-bubble); color: var(--error-text); border: 1px solid var(--error-text); }
-    [data-theme="purple"] .message.user .message-content::before { content: ''; position: absolute; inset: -1px; background: var(--accent-gradient); border-radius: inherit; z-index: -1; opacity: 0.9; }
     .message-content p { margin: 0.5rem 0; } .message-content p:first-child { margin-top: 0; }
-    .message-content code { font-family: 'JetBrains Mono', monospace; background: var(--bg-secondary); padding: 0.2rem 0.4rem; border-radius: 4px; font-size: 0.85em; color: var(--accent-primary); }
+    .message-content code { font-family: var(--font-mono); background: var(--bg-secondary); padding: 0.2rem 0.4rem; border-radius: 4px; font-size: 0.85em; color: var(--accent-primary); }
     .message-content pre { margin: 0; }
     
-    /* Copy overlay for long press */
+    /* Copy overlay */
     .copy-overlay {
-      position: absolute;
-      top: -40px;
-      right: 0;
-      background: var(--accent-primary);
-      color: white;
-      padding: 0.4rem 0.8rem;
-      border-radius: var(--radius-sm);
-      font-size: 0.8rem;
-      cursor: pointer;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.2s;
-      z-index: 10;
+      position: absolute; top: -40px; right: 0;
+      background: var(--accent-primary); color: white; padding: 0.4rem 0.8rem;
+      border-radius: var(--radius-sm); font-size: 0.8rem; cursor: pointer;
+      opacity: 0; pointer-events: none; transition: opacity 0.2s; z-index: 10;
       box-shadow: 0 2px 8px rgba(0,0,0,0.2);
     }
-    .message-wrapper:hover .copy-overlay {
-      opacity: 1;
-      pointer-events: auto;
-    }
+    .message-wrapper:hover .copy-overlay { opacity: 1; pointer-events: auto; }
     
     /* Simplified Code Block */
     .code-block { margin: 0.75rem 0; border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--border-color); background: var(--code-bg); }
-    .code-header { display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.3); padding: 0.4rem 0.8rem; color: var(--text-muted); font-size: 0.75rem; font-family: 'JetBrains Mono', monospace; }
+    .code-header { display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.3); padding: 0.4rem 0.8rem; color: var(--text-muted); font-size: 0.75rem; font-family: var(--font-mono); }
     .code-lang { text-transform: uppercase; font-weight: 600; letter-spacing: 0.05em; }
     .code-actions { display: flex; gap: 0.4rem; }
-    .code-btn { background: rgba(255,255,255,0.1); border: none; color: var(--text-muted); padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.7rem; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 0.25rem; font-family: 'Inter', sans-serif; }
+    .code-btn { background: rgba(255,255,255,0.1); border: none; color: var(--text-muted); padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.7rem; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 0.25rem; font-family: var(--font-main); }
     .code-btn:hover { background: rgba(255,255,255,0.2); color: white; }
     .code-btn.copied { background: #22c55e; color: white; }
     .code-btn svg { width: 12px; height: 12px; }
-    .code-body { padding: 0.85rem; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; line-height: 1.5; color: #e2e8f0; background: var(--code-bg); white-space: pre; }
+    .code-body { padding: 0.85rem; overflow-x: auto; font-family: var(--font-mono); font-size: 0.85rem; line-height: 1.5; color: #e2e8f0; background: var(--code-bg); white-space: pre; }
     
     /* File Artifacts */
     .file-artifact { margin: 0.75rem 0; border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--border-color); background: var(--code-bg); }
-    .file-header { display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.3); padding: 0.4rem 0.8rem; color: var(--text-muted); font-size: 0.75rem; font-family: 'JetBrains Mono', monospace; }
+    .file-header { display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.3); padding: 0.4rem 0.8rem; color: var(--text-muted); font-size: 0.75rem; font-family: var(--font-mono); }
     .file-name { text-transform: uppercase; font-weight: 600; letter-spacing: 0.05em; }
     .file-actions { display: flex; gap: 0.4rem; }
-    .file-btn { background: rgba(255,255,255,0.1); border: none; color: var(--text-muted); padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.7rem; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 0.25rem; font-family: 'Inter', sans-serif; }
+    .file-btn { background: rgba(255,255,255,0.1); border: none; color: var(--text-muted); padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.7rem; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 0.25rem; font-family: var(--font-main); }
     .file-btn:hover { background: rgba(255,255,255,0.2); color: white; }
     .file-btn.copied { background: #22c55e; color: white; }
     .file-btn svg { width: 12px; height: 12px; }
-    .file-body { padding: 0.85rem; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; line-height: 1.5; color: #e2e8f0; background: var(--code-bg); white-space: pre; }
+    .file-body { padding: 0.85rem; overflow-x: auto; font-family: var(--font-mono); font-size: 0.85rem; line-height: 1.5; color: #e2e8f0; background: var(--code-bg); white-space: pre; }
     
     .message-actions { display: flex; gap: 0.5rem; margin-top: 0.5rem; opacity: 0; transition: opacity 0.2s; }
     .message:hover .message-actions { opacity: 1; }
@@ -221,12 +209,8 @@
     /* Thinking Indicator */
     .thinking-indicator { display: inline-flex; align-items: center; gap: 0.75rem; color: var(--text-muted); font-size: 0.9rem; font-style: italic; padding: 0.5rem 0; }
     .thinking-bulb {
-      width: 20px; height: 20px;
-      background: #ffd700;
-      border-radius: 50%;
-      position: relative;
-      animation: glowPulse 1.5s infinite alternate;
-      box-shadow: 0 0 10px #ffd700;
+      width: 20px; height: 20px; background: #ffd700; border-radius: 50%; position: relative;
+      animation: glowPulse 1.5s infinite alternate; box-shadow: 0 0 10px #ffd700;
     }
     .thinking-bulb::after {
       content: ''; position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%);
@@ -248,7 +232,7 @@
     .send-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
     .input-hint { text-align: center; font-size: 0.75rem; color: var(--text-muted); margin-top: 0.5rem; }
 
-    /* Scroll to bottom - CENTERED */
+    /* Scroll to bottom */
     .scroll-bottom-btn { 
       position: fixed; bottom: 90px; left: 50%; 
       background: var(--accent-gradient); color: white; width: 44px; height: 44px; 
@@ -326,81 +310,114 @@
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
       <button class="new-chat-btn" onclick="showNameChatModal()">
-        <span>+</span> New Chat
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+        New Chat
       </button>
     </div>
     <div class="sidebar-content" id="chatHistory"></div>
     <div class="sidebar-footer">
-      <button class="settings-btn" onclick="openSettings()">⚙️ Settings</button>
+      <button class="settings-btn" onclick="openSettings()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline;vertical-align:middle;margin-right:0.5rem"><path d="M12 15a3 3 0 100-6 3 3 0 000 6z"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+        Settings
+      </button>
     </div>
   </aside>
 
   <main class="main-content">
     <div class="top-bar">
-      <button class="mobile-menu-btn" onclick="toggleSidebar()">☰</button>
+      <button class="mobile-menu-btn" onclick="toggleSidebar()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+      </button>
       
-      <!-- Gengar Branding -->
+      <!-- Gengar Logo -->
       <div style="display: flex; align-items: center; gap: 0.75rem;">
-        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8 0-1.85.63-3.55 1.69-4.9L12 14l6.31-6.9C19.37 8.45 20 10.15 20 12c0 4.42-3.58 8-8 8z" fill="url(#grad1)"/>
-          <path d="M12 4c-1.66 0-3.32.34-4.57 1.02L12 10l4.57-4.98C15.32 4.34 13.66 4 12 4z" fill="#a78bfa"/>
-          <circle cx="9" cy="9" r="1.5" fill="#fff"/>
-          <circle cx="15" cy="9" r="1.5" fill="#fff"/>
-          <path d="M7 16c0 0 1.5 2 5 2s5-2 5-2" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
-          <defs>
-            <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" style="stop-color:#7c3aed;stop-opacity:1" />
-              <stop offset="100%" style="stop-color:#a78bfa;stop-opacity:1" />
-            </linearGradient>
-          </defs>
-        </svg>
+        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/94.png" alt="Gengar" style="width: 32px; height: 32px; image-rendering: pixelated;">
         <span style="font-weight: 700; font-size: 1.1rem; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">KJ AI</span>
       </div>
 
       <div class="model-controls">
         <div class="model-wrapper">
           <button class="model-btn" onclick="toggleModelDropdown()">
-            <span id="selectedModelAvatar">🤖</span>
-            <span id="selectedModelName">Qwen3.6 Plus</span> ▾
+            <span id="selectedModelIcon" class="model-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10H12V2z"/><path d="M12 2a10 10 0 0 1 10 10h-10V2z"/></svg>
+            </span>
+            <span id="selectedModelName">Llama 3.3 Free</span> ▾
           </button>
           <div class="model-dropdown" id="modelDropdown">
-            <div class="model-option active" data-model="openrouter/free" data-name="Qwen3.6 Plus" data-avatar="🤖">
-              <div class="model-avatar">🤖</div>
+            <div class="model-option active" data-model="meta-llama/llama-3.3-70b-instruct:free" data-name="Llama 3.3 Free" data-desc="Best Free Model • 128K context">
+              <div class="model-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10H12V2z"/><path d="M12 2a10 10 0 0 1 10 10h-10V2z"/></svg>
+              </div>
               <div class="model-info">
-                <div class="model-name">Qwen3.6 Plus</div>
-                <div class="model-desc">Complex Thinker & Strong Coder</div>
+                <div class="model-name">Llama 3.3 Free</div>
+                <div class="model-desc">Best Free Model • 128K context</div>
               </div>
             </div>
-            <div class="model-option" data-model="nvidia/nemotron-3-super-120b-a12b:free" data-name="Nemotron 3 Super" data-avatar="🧠">
-              <div class="model-avatar">🧠</div>
+            <div class="model-option" data-model="qwen/qwen3.5-plus:free" data-name="Qwen 3.5 Plus Free" data-desc="Strong Coding • 1M context">
+              <div class="model-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 10 10h-10V2z"/></svg>
+              </div>
               <div class="model-info">
-                <div class="model-name">Nemotron 3 Super</div>
-                <div class="model-desc">Fast & Efficient Multi-Agent</div>
+                <div class="model-name">Qwen 3.5 Plus Free</div>
+                <div class="model-desc">Strong Coding • 1M context</div>
               </div>
             </div>
-            <div class="model-option" data-model="minimax/minimax-m2.5:free" data-name="MiniMax M2.5" data-avatar="⚡">
-              <div class="model-avatar">⚡</div>
+            <div class="model-option" data-model="mistralai/mistral-small-24b-instruct-2501:free" data-name="Mistral Small Free" data-desc="Fast & Efficient • 32K context">
+              <div class="model-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+              </div>
               <div class="model-info">
-                <div class="model-name">MiniMax M2.5</div>
-                <div class="model-desc">Office & Productivity Expert</div>
+                <div class="model-name">Mistral Small Free</div>
+                <div class="model-desc">Fast & Efficient • 32K context</div>
               </div>
             </div>
-            <div class="model-option" data-model="stepfun/step-3.5-flash:free" data-name="Step 3.5 Flash" data-avatar="🌊">
-              <div class="model-avatar">🌊</div>
+            <div class="model-option" data-model="nvidia/nemotron-3-super-120b-a12b:free" data-name="Nemotron 3 Super Free" data-desc="Multi-Agent • 1M context">
+              <div class="model-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+              </div>
               <div class="model-info">
-                <div class="model-name">Step 3.5 Flash</div>
+                <div class="model-name">Nemotron 3 Super Free</div>
+                <div class="model-desc">Multi-Agent • 1M context</div>
+              </div>
+            </div>
+            <div class="model-option" data-model="stepfun/step-3.5-flash:free" data-name="Step 3.5 Flash Free" data-desc="Ultra-Fast Reasoning">
+              <div class="model-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+              </div>
+              <div class="model-info">
+                <div class="model-name">Step 3.5 Flash Free</div>
                 <div class="model-desc">Ultra-Fast Reasoning</div>
+              </div>
+            </div>
+            <div class="model-option" data-model="google/gemma-3-1b-it:free" data-name="Gemma 3 1B Free" data-desc="Lightweight & Fast">
+              <div class="model-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10H12V2z"/><path d="M12 2a10 10 0 0 1 10 10h-10V2z"/></svg>
+              </div>
+              <div class="model-info">
+                <div class="model-name">Gemma 3 1B Free</div>
+                <div class="model-desc">Lightweight & Fast</div>
+              </div>
+            </div>
+            <div class="model-option" data-model="anthropic/claude-3-haiku" data-name="Claude 3 Haiku" data-desc="Fastest Claude (Paid/Limited)">
+              <div class="model-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10H12V2z"/><path d="M12 2a10 10 0 0 1 10 10h-10V2z"/></svg>
+              </div>
+              <div class="model-info">
+                <div class="model-name">Claude 3 Haiku</div>
+                <div class="model-desc">Fastest Claude (Paid/Limited)</div>
               </div>
             </div>
           </div>
         </div>
         
         <div class="collab-toggle" id="collabToggle" onclick="toggleCollabMode()">
-          <span>🤝 Collaborative</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          <span>Collaborative</span>
         </div>
         
         <button class="thought-toggle" onclick="toggleThoughtPanel()">
-          🧩 Thoughts
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Thoughts
         </button>
       </div>
 
@@ -442,12 +459,15 @@
   <div class="thought-panel-overlay" id="thoughtOverlay" onclick="toggleThoughtPanel()"></div>
   <div class="thought-panel" id="thoughtPanel">
     <div class="thought-panel-header">
-      <div class="thought-panel-title">🧩 AI Thought Process</div>
+      <div class="thought-panel-title">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        AI Thought Process
+      </div>
       <button class="modal-close" onclick="toggleThoughtPanel()">✕</button>
     </div>
     <div class="thought-panel-body" id="thoughtBody">
       <div style="text-align: center; color: var(--text-muted); padding: 2rem 1rem;">
-        <p style="font-size: 2rem; margin-bottom: 0.5rem;">💭</p>
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom: 1rem; opacity: 0.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
         <p>AI discussions will appear here</p>
       </div>
     </div>
@@ -456,7 +476,7 @@
   <!-- Name Chat Modal -->
   <div class="modal-overlay" id="nameChatModal">
     <div class="modal">
-      <div class="modal-header"><h3>💬 Name Your Chat</h3><button class="modal-close" onclick="closeNameChatModal()">✕</button></div>
+      <div class="modal-header"><h3>Name Your Chat</h3><button class="modal-close" onclick="closeNameChatModal()">✕</button></div>
       <input type="text" id="chatNameInput" class="modal-input" placeholder="e.g. Coding Help, Story Ideas..." maxlength="50">
       <div class="modal-actions">
         <button class="modal-btn secondary" onclick="closeNameChatModal()">Cancel</button>
@@ -468,7 +488,7 @@
   <!-- Delete Confirm Modal -->
   <div class="modal-overlay" id="deleteChatModal">
     <div class="modal">
-      <div class="modal-header"><h3>🗑️ Delete Chat</h3><button class="modal-close" onclick="closeDeleteModal()">✕</button></div>
+      <div class="modal-header"><h3>Delete Chat</h3><button class="modal-close" onclick="closeDeleteModal()">✕</button></div>
       <p style="margin-bottom: 1rem; color: var(--text-secondary);">Are you sure you want to delete this chat? This action cannot be undone.</p>
       <div class="modal-actions">
         <button class="modal-btn secondary" onclick="closeDeleteModal()">Cancel</button>
@@ -480,22 +500,22 @@
   <!-- Settings Modal -->
   <div class="modal-overlay" id="settingsModal">
     <div class="modal">
-      <div class="modal-header"><h3>⚙️ Settings</h3><button class="modal-close" onclick="closeSettings()">✕</button></div>
+      <div class="modal-header"><h3>Settings</h3><button class="modal-close" onclick="closeSettings()">✕</button></div>
       <div style="margin-bottom: 1rem;">
-        <div style="font-weight: 500; margin-bottom: 0.5rem;">🎨 Theme</div>
+        <div style="font-weight: 500; margin-bottom: 0.5rem;">Theme</div>
         <div class="theme-grid">
-          <div class="theme-opt active" data-theme="light" onclick="setTheme('light')">☀️ Light</div>
-          <div class="theme-opt" data-theme="dark" onclick="setTheme('dark')">🌙 Dark</div>
-          <div class="theme-opt purple" data-theme="purple" onclick="setTheme('purple')">🌌 Purple</div>
-          <div class="theme-opt" data-theme="sakura" onclick="setTheme('sakura')">🌸 Sakura</div>
-          <div class="theme-opt" data-theme="radioactive" onclick="setTheme('radioactive')">☢️ Radioactive</div>
-          <div class="theme-opt" data-theme="cursed" onclick="setTheme('cursed')">🔥 Cursed</div>
-          <div class="theme-opt" data-theme="divine" onclick="setTheme('divine')">✨ Divine</div>
-          <div class="theme-opt" data-theme="yinyang" onclick="setTheme('yinyang')">☯️ Yin Yang</div>
-          <div class="theme-opt" data-theme="spooky" onclick="setTheme('spooky')">🎃 Spooky</div>
+          <div class="theme-opt active" data-theme="light" onclick="setTheme('light')">Light</div>
+          <div class="theme-opt" data-theme="dark" onclick="setTheme('dark')">Dark</div>
+          <div class="theme-opt purple" data-theme="purple" onclick="setTheme('purple')">Purple</div>
+          <div class="theme-opt" data-theme="sakura" onclick="setTheme('sakura')">Sakura</div>
+          <div class="theme-opt" data-theme="radioactive" onclick="setTheme('radioactive')">Radioactive</div>
+          <div class="theme-opt" data-theme="cursed" onclick="setTheme('cursed')">Cursed</div>
+          <div class="theme-opt" data-theme="divine" onclick="setTheme('divine')">Divine</div>
+          <div class="theme-opt" data-theme="yinyang" onclick="setTheme('yinyang')">Yin Yang</div>
+          <div class="theme-opt" data-theme="spooky" onclick="setTheme('spooky')">Spooky</div>
         </div>
       </div>
-      <button class="modal-btn secondary" style="width:100%; margin-top:0.5rem" onclick="location.reload()">↻ Refresh Page</button>
+      <button class="modal-btn secondary" style="width:100%; margin-top:0.5rem" onclick="location.reload()">Refresh Page</button>
     </div>
   </div>
 
@@ -505,17 +525,19 @@ const API_URL = 'https://kj-ai-proxy.babydripson.workers.dev';
 
 // Model definitions
 const MODELS = [
-  { id: 'openrouter/free', name: 'Qwen3.6 Plus', avatar: '🤖', desc: 'Complex Thinker & Strong Coder' },
-  { id: 'nvidia/nemotron-3-super-120b-a12b:free', name: 'Nemotron 3 Super', avatar: '🧠', desc: 'Fast & Efficient Multi-Agent' },
-  { id: 'minimax/minimax-m2.5:free', name: 'MiniMax M2.5', avatar: '⚡', desc: 'Office & Productivity Expert' },
-  { id: 'stepfun/step-3.5-flash:free', name: 'Step 3.5 Flash', avatar: '🌊', desc: 'Ultra-Fast Reasoning' }
+  { id: 'meta-llama/llama-3.3-70b-instruct:free', name: 'Llama 3.3 Free', desc: 'Best Free Model' },
+  { id: 'qwen/qwen3.5-plus:free', name: 'Qwen 3.5 Plus Free', desc: 'Strong Coding' },
+  { id: 'mistralai/mistral-small-24b-instruct-2501:free', name: 'Mistral Small Free', desc: 'Fast & Efficient' },
+  { id: 'nvidia/nemotron-3-super-120b-a12b:free', name: 'Nemotron 3 Super Free', desc: 'Multi-Agent' },
+  { id: 'stepfun/step-3.5-flash:free', name: 'Step 3.5 Flash Free', desc: 'Ultra-Fast Reasoning' },
+  { id: 'google/gemma-3-1b-it:free', name: 'Gemma 3 1B Free', desc: 'Lightweight & Fast' },
+  { id: 'anthropic/claude-3-haiku', name: 'Claude 3 Haiku', desc: 'Fastest Claude (Paid/Limited)' }
 ];
 
 // STATE
 const state = {
-  model: 'openrouter/free',
-  modelAvatar: '🤖',
-  modelName: 'Qwen3.6 Plus',
+  model: 'meta-llama/llama-3.3-70b-instruct:free',
+  modelName: 'Llama 3.3 Free',
   theme: localStorage.getItem('kjai-theme') || 'purple',
   isGenerating: false,
   lastMsgTime: 0,
@@ -527,12 +549,14 @@ const state = {
   thoughts: [],
   deleteTargetId: null,
   pausedForBackground: false,
-  generationQueue: []
+  generationQueue: [],
+  pendingPrompts: [],
+  currentController: null
 };
 
 // INIT
 document.addEventListener('DOMContentLoaded', () => {
-  console.log('KJ AI v3 Started ✅');
+  console.log('KJ AI v4 Started ✅');
   applyTheme(state.theme);
   setupEvents();
   renderChatHistory();
@@ -576,9 +600,7 @@ function setupEvents() {
     opt.addEventListener('click', () => {
       state.model = opt.dataset.model;
       state.modelName = opt.dataset.name;
-      state.modelAvatar = opt.dataset.avatar;
       document.getElementById('selectedModelName').textContent = state.modelName;
-      document.getElementById('selectedModelAvatar').textContent = state.modelAvatar;
       document.querySelectorAll('.model-option').forEach(o => o.classList.remove('active'));
       opt.classList.add('active');
       document.getElementById('modelDropdown').classList.remove('active');
@@ -607,6 +629,13 @@ function setupEvents() {
       document.getElementById('bgBanner').classList.remove('show');
       state.pausedForBackground = false;
       processQueue();
+    }
+  });
+
+  // Tab close handling
+  window.addEventListener('beforeunload', () => {
+    if (state.currentController) {
+      state.currentController.abort();
     }
   });
 }
@@ -711,7 +740,7 @@ function loadChat(id) {
       if (msg.role === 'user') {
         addMessage(msg.content, 'user', null, false);
       } else {
-        const avatar = msg.avatar || state.modelAvatar;
+        const avatar = msg.avatar || 'ai';
         const sender = msg.sender || state.modelName;
         const msgId = addMessage(msg.content, 'ai', avatar, true, sender, msg.isError);
         if (!msg.isError) addMessageActions(msgId);
@@ -776,7 +805,7 @@ function renderThoughts() {
   if (state.thoughts.length === 0) {
     body.innerHTML = `
       <div style="text-align: center; color: var(--text-muted); padding: 2rem 1rem;">
-        <p style="font-size: 2rem; margin-bottom: 0.5rem;">💭</p>
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom: 1rem; opacity: 0.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
         <p>AI discussions will appear here</p>
       </div>
     `;
@@ -843,7 +872,9 @@ async function sendMessage() {
       await sendSingleMessage(prompt);
     }
   } catch (err) {
-    addMessage(`❌ Error: ${err.message}`, 'ai', '⚠️', false, 'System', true);
+    if (err.name !== 'AbortError') {
+      addMessage(`❌ Error: ${err.message}`, 'ai', 'ai', false, 'System', true);
+    }
   } finally {
     state.isGenerating = false;
     document.getElementById('promptInput').disabled = false;
@@ -854,21 +885,21 @@ async function sendMessage() {
 
 // Single Model Message
 async function sendSingleMessage(prompt) {
-  const model = MODELS.find(m => m.id === state.model) || MODELS[0];
-  const thinkingId = addThinkingMessage(model.name, model.avatar);
   const history = getChatHistoryForAPI();
+  
+  state.currentController = new AbortController();
   
   try {
     const res = await fetch(API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ prompt, model: state.model, history })
+      body: JSON.stringify({ prompt, model: state.model, history }),
+      signal: state.currentController.signal
     });
     
     if (!res.ok) throw new Error(`Server error: ${res.status}`);
     
-    removeThinkingMessage(thinkingId);
-    const msgId = addMessage('', 'ai', model.avatar, true, model.name);
+    const msgId = addMessage('', 'ai', 'ai', true, state.modelName);
     const contentEl = document.querySelector(`#${msgId} .message-content`);
     
     const reader = res.body.getReader();
@@ -910,24 +941,31 @@ async function sendSingleMessage(prompt) {
     if (state.currentChatId) {
       const chat = state.chats.find(c => c.id === state.currentChatId);
       if (chat) {
-        chat.messages.push({ role: 'assistant', content: fullText, sender: model.name, avatar: model.avatar });
+        chat.messages.push({ role: 'assistant', content: fullText, sender: state.modelName, avatar: 'ai' });
         saveChats();
       }
     }
   } catch (err) {
-    removeThinkingMessage(thinkingId);
+    if (err.name === 'AbortError') {
+      const msg = document.querySelector(`#${msgId}`);
+      if (msg) {
+        const content = msg.querySelector('.message-content');
+        content.innerHTML += '<br><em style="color: var(--text-muted);">[Generation stopped]</em>';
+      }
+    }
     throw err;
   }
 }
 
-// Collaborative Mode Message
+// Collaborative Mode Message with Real Conversation
 async function sendCollaborativeMessage(prompt) {
   const history = getChatHistoryForAPI();
   const initialThoughts = [];
   
   // Step 1: Each model gives initial thoughts
   for (const model of MODELS) {
-    const thinkingId = addThinkingMessage(model.name, model.avatar);
+    state.currentController = new AbortController();
+    const thinkingId = addThinkingMessage(model.name, 'ai');
     try {
       const res = await fetch(API_URL, {
         method: 'POST',
@@ -936,7 +974,8 @@ async function sendCollaborativeMessage(prompt) {
           prompt: `You are ${model.name}. Analyze: "${prompt}". Give concise initial perspective.`,
           model: model.id,
           history
-        })
+        }),
+        signal: state.currentController.signal
       });
       removeThinkingMessage(thinkingId);
       if (res.ok) {
@@ -956,7 +995,7 @@ async function sendCollaborativeMessage(prompt) {
         }
         if (modelResponse) {
           initialThoughts.push({ model, response: modelResponse });
-          addThought(model.name, model.avatar, modelResponse);
+          addThought(model.name, 'ai', modelResponse);
         }
       }
     } catch (err) {
@@ -964,21 +1003,39 @@ async function sendCollaborativeMessage(prompt) {
     }
   }
   
-  // Step 2: Discussion & Consensus
-  const discussionPrompt = `AI Discussion so far:\n${initialThoughts.map(it => `${it.model.avatar} ${it.model.name}: ${it.response}`).join('\n\n')}\n\nSynthesize a consensus response.`;
-  const thinkingId = addThinkingMessage('Consensus', '🤝');
+  // Step 2: Models discuss and build on each other
+  const discussionPrompt = `You are participating in a collaborative AI discussion. Here are the initial thoughts from each model:
+
+${initialThoughts.map(it => `${it.model.name}: ${it.response}`).join('\n\n')}
+
+As ${state.modelName}, please:
+1. Analyze the different perspectives
+2. Build on good ideas
+3. Question weak points
+4. Work toward a consensus
+
+Be constructive and concise.`;
+
+  state.currentController = new AbortController();
+  const thinkingId = addThinkingMessage('Discussion', 'ai');
   
   try {
     const res = await fetch(API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ prompt: discussionPrompt, model: state.model, history })
+      body: JSON.stringify({
+        prompt: discussionPrompt,
+        model: state.model,
+        history
+      }),
+      signal: state.currentController.signal
     });
     
     removeThinkingMessage(thinkingId);
+    
     if (!res.ok) throw new Error(`Server error: ${res.status}`);
     
-    const msgId = addMessage('', 'ai', '🤝', true, 'Collaborative Consensus');
+    const msgId = addMessage('', 'ai', 'ai', true, 'Collaborative Consensus');
     const contentEl = document.querySelector(`#${msgId} .message-content`);
     
     const badge = document.createElement('div');
@@ -1019,18 +1076,18 @@ async function sendCollaborativeMessage(prompt) {
     }
     
     addMessageActions(msgId);
-    addThought('Consensus', '🤝', fullText.substring(0, 200) + '...', true);
+    addThought('Consensus', 'ai', fullText.substring(0, 200) + '...', true);
     
     if (state.currentChatId) {
       const chat = state.chats.find(c => c.id === state.currentChatId);
       if (chat) {
-        chat.messages.push({ role: 'assistant', content: fullText, sender: 'Collaborative Consensus', avatar: '🤝', collaborative: true });
+        chat.messages.push({ role: 'assistant', content: fullText, sender: 'Collaborative Consensus', avatar: 'ai', collaborative: true });
         saveChats();
       }
     }
   } catch (err) {
     removeThinkingMessage(thinkingId);
-    throw err;
+    if (err.name !== 'AbortError') throw err;
   }
 }
 
@@ -1042,7 +1099,9 @@ function addThinkingMessage(sender, avatar) {
   div.className = 'message ai';
   div.id = id;
   div.innerHTML = `
-    <div class="message-avatar">${avatar}</div>
+    <div class="message-avatar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10H12V2z"/><path d="M12 2a10 10 0 0 1 10 10h-10V2z"/></svg>
+    </div>
     <div class="message-wrapper">
       <div class="message-sender">${escapeHtml(sender)} <span class="message-tag">thinking...</span></div>
       <div class="message-content">
@@ -1071,7 +1130,7 @@ function addMessage(text, sender, avatar = null, returnId = false, senderName = 
   div.className = `message ${sender} ${isError ? 'error' : ''}`;
   if (returnId) div.id = id;
   
-  const modelAvatar = avatar || (sender === 'user' ? '👤' : state.modelAvatar);
+  const modelAvatar = avatar || (sender === 'user' ? 'user' : 'ai');
   const displayName = senderName || (sender === 'user' ? 'You' : state.modelName);
   
   let senderHtml = '';
@@ -1079,10 +1138,13 @@ function addMessage(text, sender, avatar = null, returnId = false, senderName = 
     senderHtml = `<div class="message-sender">${escapeHtml(displayName)} <span class="message-tag">${state.modelName}</span></div>`;
   }
   
+  const userIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>`;
+  const aiIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10H12V2z"/><path d="M12 2a10 10 0 0 1 10 10h-10V2z"/></svg>`;
+  
   div.innerHTML = `
-    <div class="message-avatar">${modelAvatar}</div>
+    <div class="message-avatar">${modelAvatar === 'user' ? userIcon : aiIcon}</div>
     <div class="message-wrapper">
-      <div class="copy-overlay" onclick="copyMessageText('${id}')">📋 Copy</div>
+      <div class="copy-overlay" onclick="copyMessageText('${id}')">Copy</div>
       ${senderHtml}
       <div class="message-content">${sender === 'ai' ? parseMarkdown(text, id) : escapeHtml(text).replace(/\n/g, '<br>')}</div>
     </div>
@@ -1102,7 +1164,7 @@ function copyMessageText(id) {
     const overlay = msg.querySelector('.copy-overlay');
     if (overlay) {
       const orig = overlay.innerHTML;
-      overlay.innerHTML = '✅ Copied!';
+      overlay.innerHTML = '✓ Copied!';
       setTimeout(() => { overlay.innerHTML = orig; }, 2000);
     }
   });
@@ -1114,8 +1176,8 @@ function addMessageActions(id) {
   const actions = document.createElement('div');
   actions.className = 'message-actions';
   actions.innerHTML = `
-    <button class="action-btn" onclick="copyMsg('${id}')">📋 Copy</button>
-    <button class="action-btn" onclick="retryMsg('${id}')">🔄 Retry</button>
+    <button class="action-btn" onclick="copyMsg('${id}')">Copy</button>
+    <button class="action-btn" onclick="retryMsg('${id}')">Retry</button>
   `;
   wrapper.appendChild(actions);
 }
@@ -1126,7 +1188,7 @@ function copyMsg(id) {
     const btn = document.querySelector(`#${id} .action-btn`);
     if (btn) {
       const orig = btn.innerHTML;
-      btn.innerHTML = '✅ Copied';
+      btn.innerHTML = '✓ Copied';
       setTimeout(() => { btn.innerHTML = orig; }, 2000);
     }
   });
@@ -1151,7 +1213,6 @@ function parseMarkdown(text, msgId = null) {
   let h = text;
   
   // Strict laugh emoji check (ONLY 😂 and 🤣)
-  // We use dataset to ensure it only triggers ONCE per message, even during streaming
   if (msgId) {
     const el = document.getElementById(msgId);
     if (el && !el.dataset.laughterTriggered && /[😂🤣]/.test(h)) {
@@ -1222,7 +1283,7 @@ function downloadFile(id, fileName) {
   const btn = document.querySelector(`#${id} .file-btn`);
   if (btn) {
     const orig = btn.innerHTML;
-    btn.innerHTML = '✅ Downloaded';
+    btn.innerHTML = '✓ Downloaded';
     setTimeout(() => { btn.innerHTML = orig; }, 2000);
   }
 }
@@ -1234,7 +1295,7 @@ function copyCodeBlock(id) {
   navigator.clipboard.writeText(code).then(() => {
     block.querySelectorAll('.code-btn, .file-btn').forEach(btn => {
       btn.classList.add('copied');
-      btn.innerHTML = '✅ Copied';
+      btn.innerHTML = '✓ Copied';
       setTimeout(() => {
         btn.classList.remove('copied');
         const isHeader = btn.closest('.code-header, .file-header');
