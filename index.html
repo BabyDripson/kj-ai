@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>KJ AI • Collaborative Studio</title>
+  <title>KJ AI • Free & Fast</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400&family=Noto+Serif+JP:wght@400;700&family=Special+Elite&family=Cinzel:wght@400;700&family=Noto+Serif+SC:wght@400;700&family=Creepster&family=Rubik+Glitch&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
   
@@ -41,7 +41,6 @@
       --user-bubble: linear-gradient(135deg, #ff69b4, #ff1493); --user-text: #ffffff; --ai-bubble: #fff0f5; --ai-text: #8b4513;
       --error-bubble: #ffe4e1; --error-text: #dc143c; --code-bg: #fff5ee;
       --font-main: 'Noto Serif JP', serif;
-      --shadow-glow: 0 0 20px rgba(255, 105, 180, 0.3);
     }
     [data-theme="radioactive"] {
       --bg-primary: #0a0f0a; --bg-secondary: #0f1f0f; --bg-tertiary: #1a2f1a;
@@ -50,7 +49,6 @@
       --user-bubble: linear-gradient(135deg, #39ff14, #7fff00); --user-text: #000000; --ai-bubble: #0f1f0f; --ai-text: #39ff14;
       --error-bubble: #1f0f0f; --error-text: #ff3914; --code-bg: #051005;
       --font-main: 'JetBrains Mono', monospace;
-      --shadow-glow: 0 0 20px rgba(57, 255, 20, 0.4);
     }
     [data-theme="cursed"] {
       --bg-primary: #1a0000; --bg-secondary: #2f0000; --bg-tertiary: #4f0000;
@@ -59,7 +57,6 @@
       --user-bubble: linear-gradient(135deg, #ff4500, #dc143c); --user-text: #ffffff; --ai-bubble: #2f0000; --ai-text: #ff4500;
       --error-bubble: #3f0000; --error-text: #ff0000; --code-bg: #0f0000;
       --font-main: 'Special Elite', cursive;
-      --shadow-glow: 0 0 20px rgba(255, 69, 0, 0.4);
     }
     [data-theme="divine"] {
       --bg-primary: #faf8f0; --bg-secondary: #fff8dc; --bg-tertiary: #fffacd;
@@ -68,7 +65,6 @@
       --user-bubble: linear-gradient(135deg, #ffd700, #fffacd); --user-text: #8b4513; --ai-bubble: #fff8dc; --ai-text: #ffd700;
       --error-bubble: #fff0f5; --error-text: #dc143c; --code-bg: #fffff0;
       --font-main: 'Cinzel', serif;
-      --shadow-glow: 0 0 30px rgba(255, 215, 0, 0.5);
     }
     [data-theme="yinyang"] {
       --bg-primary: #ffffff; --bg-secondary: #f5f5f5; --bg-tertiary: #e8e8e8;
@@ -85,12 +81,10 @@
       --user-bubble: linear-gradient(135deg, #ff6600, #9932cc); --user-text: #ffffff; --ai-bubble: #2d1f4e; --ai-text: #ff9500;
       --error-bubble: #3f0f0f; --error-text: #ff3300; --code-bg: #1f0f2e;
       --font-main: 'Creepster', cursive;
-      --shadow-glow: 0 0 20px rgba(255, 102, 0, 0.4);
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: var(--font-main); background: var(--bg-primary); color: var(--text-primary); line-height: 1.6; height: 100vh; display: flex; overflow: hidden; transition: background var(--transition), color var(--transition); }
     
-    /* Sidebar */
     .sidebar { width: var(--sidebar-width); background: var(--bg-secondary); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; z-index: 100; transition: transform var(--transition); }
     .sidebar-header { padding: 1.25rem; border-bottom: 1px solid var(--border-color); }
     .new-chat-btn { width: 100%; background: var(--accent-gradient); color: white; border: none; padding: 0.75rem; border-radius: var(--radius-md); font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem; box-shadow: var(--shadow-glow); transition: transform 0.2s; }
@@ -107,12 +101,10 @@
     .settings-btn { width: 100%; background: var(--bg-tertiary); border: 1px solid var(--border-color); color: var(--text-primary); padding: 0.6rem; border-radius: var(--radius-sm); cursor: pointer; transition: all 0.2s; }
     .settings-btn:hover { background: var(--bg-primary); }
 
-    /* Main */
     .main-content { flex: 1; display: flex; flex-direction: column; position: relative; }
     .top-bar { padding: 1rem 1.5rem; border-bottom: 1px solid var(--border-color); background: var(--bg-secondary); display: flex; justify-content: space-between; align-items: center; z-index: 10; gap: 0.75rem; flex-wrap: wrap; }
     .mobile-menu-btn { display: none; background: none; border: none; color: var(--text-primary); cursor: pointer; padding: 0.5rem; }
     
-    /* Model Selector */
     .model-controls { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
     .model-wrapper { position: relative; }
     .model-btn { background: var(--bg-tertiary); border: 1px solid var(--border-color); color: var(--text-primary); padding: 0.6rem 1rem; border-radius: var(--radius-md); cursor: pointer; display: flex; align-items: center; gap: 0.5rem; font-weight: 500; transition: all 0.2s; white-space: nowrap; }
@@ -140,7 +132,6 @@
     .thought-toggle { background: var(--bg-tertiary); border: 1px solid var(--border-color); color: var(--text-primary); padding: 0.5rem 0.85rem; border-radius: var(--radius-md); cursor: pointer; display: flex; align-items: center; gap: 0.4rem; font-size: 0.85rem; font-weight: 500; transition: all 0.2s; }
     .thought-toggle:hover { border-color: var(--accent-primary); }
 
-    /* Chat */
     .chat-container { flex: 1; overflow-y: auto; padding: 1.5rem; position: relative; }
     .chat-container > * { position: relative; z-index: 1; }
     .chat-container::-webkit-scrollbar { width: 6px; }
@@ -153,7 +144,6 @@
     .suggestion-chip { background: var(--bg-tertiary); border: 1px solid var(--border-color); color: var(--text-secondary); padding: 0.5rem 0.85rem; border-radius: var(--radius-full); cursor: pointer; transition: all 0.2s; }
     .suggestion-chip:hover { border-color: var(--accent-primary); color: var(--text-primary); }
 
-    /* Messages */
     .message { display: flex; gap: 0.85rem; max-width: 90%; margin-bottom: 1.25rem; animation: slideIn 0.3s ease; width: fit-content; position: relative; }
     @keyframes slideIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
     .message.user { margin-left: auto; flex-direction: row-reverse; }
@@ -173,7 +163,6 @@
     .message-content code { font-family: var(--font-mono); background: var(--bg-secondary); padding: 0.2rem 0.4rem; border-radius: 4px; font-size: 0.85em; color: var(--accent-primary); }
     .message-content pre { margin: 0; }
     
-    /* Copy overlay */
     .copy-overlay {
       position: absolute; top: -40px; right: 0;
       background: var(--accent-primary); color: white; padding: 0.4rem 0.8rem;
@@ -183,14 +172,12 @@
     }
     .message-wrapper:hover .copy-overlay { opacity: 1; pointer-events: auto; }
     
-    /* Response Navigation */
     .response-nav { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.5rem; justify-content: center; }
     .response-nav-btn { background: var(--bg-tertiary); border: 1px solid var(--border-color); color: var(--text-muted); width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; cursor: pointer; transition: all 0.2s; font-size: 0.8rem; }
     .response-nav-btn:hover:not(:disabled) { background: var(--accent-primary); color: white; border-color: var(--accent-primary); }
     .response-nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
     .response-nav-counter { font-size: 0.8rem; color: var(--text-muted); font-weight: 500; }
     
-    /* Simplified Code Block */
     .code-block { margin: 0.75rem 0; border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--border-color); background: var(--code-bg); }
     .code-header { display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.3); padding: 0.4rem 0.8rem; color: var(--text-muted); font-size: 0.75rem; font-family: var(--font-mono); }
     .code-lang { text-transform: uppercase; font-weight: 600; letter-spacing: 0.05em; }
@@ -201,7 +188,6 @@
     .code-btn svg { width: 12px; height: 12px; }
     .code-body { padding: 0.85rem; overflow-x: auto; font-family: var(--font-mono); font-size: 0.85rem; line-height: 1.5; color: #e2e8f0; background: var(--code-bg); white-space: pre; }
     
-    /* File Artifacts */
     .file-artifact { margin: 0.75rem 0; border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--border-color); background: var(--code-bg); }
     .file-header { display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.3); padding: 0.4rem 0.8rem; color: var(--text-muted); font-size: 0.75rem; font-family: var(--font-mono); }
     .file-name { text-transform: uppercase; font-weight: 600; letter-spacing: 0.05em; }
@@ -217,7 +203,6 @@
     .action-btn { background: var(--bg-tertiary); border: 1px solid var(--border-color); color: var(--text-muted); padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; cursor: pointer; display: flex; align-items: center; gap: 0.25rem; }
     .action-btn:hover { background: var(--accent-primary); color: white; }
 
-    /* Thinking Indicator */
     .thinking-indicator { display: inline-flex; align-items: center; gap: 0.75rem; color: var(--text-muted); font-size: 0.9rem; font-style: italic; padding: 0.5rem 0; }
     .thinking-bulb {
       width: 20px; height: 20px; background: #ffd700; border-radius: 50%; position: relative;
@@ -232,7 +217,6 @@
       100% { opacity: 1; transform: scale(1.1); box-shadow: 0 0 15px #ffd700; }
     }
 
-    /* Input */
     .input-area { padding: 1rem 1.5rem; border-top: 1px solid var(--border-color); background: var(--bg-secondary); }
     .input-wrapper { max-width: 900px; margin: 0 auto; position: relative; }
     .input-row { display: flex; gap: 0.75rem; align-items: flex-end; }
@@ -243,7 +227,6 @@
     .send-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
     .input-hint { text-align: center; font-size: 0.75rem; color: var(--text-muted); margin-top: 0.5rem; }
 
-    /* Scroll to bottom */
     .scroll-bottom-btn { 
       position: fixed; bottom: 90px; left: 50%; 
       background: var(--accent-gradient); color: white; width: 44px; height: 44px; 
@@ -256,11 +239,9 @@
     .scroll-bottom-btn:hover { transform: translateX(-50%) scale(1.1); }
     .scroll-bottom-btn svg { width: 22px; height: 22px; }
 
-    /* Background Banner */
     .bg-banner { position: absolute; top: 0; left: 0; right: 0; background: #f59e0b; color: #fff; text-align: center; padding: 0.5rem; font-size: 0.85rem; font-weight: 500; z-index: 20; display: none; }
     .bg-banner.show { display: block; }
 
-    /* Modals */
     .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 2000; opacity: 0; visibility: hidden; transition: all 0.3s; backdrop-filter: blur(4px); }
     .modal-overlay.active { opacity: 1; visibility: visible; }
     .modal { background: var(--bg-secondary); border-radius: var(--radius-lg); padding: 1.5rem; width: 90%; max-width: 450px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); transform: scale(0.95); transition: transform 0.3s; max-height: 90vh; overflow-y: auto; }
@@ -287,12 +268,6 @@
     .cooldown-msg.show { display: block; animation: shake 0.5s; }
     @keyframes shake { 0%, 100% { transform: translateX(0); } 20% { transform: translateX(-5px); } 40% { transform: translateX(5px); } }
 
-    /* Emoji Rain */
-    .emoji-rain { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; overflow: hidden; }
-    .emoji-rain span { position: absolute; top: -40px; font-size: 2rem; animation: emojiDrop linear forwards; opacity: 0.9; }
-    @keyframes emojiDrop { 0% { transform: translateY(0) rotate(0deg); opacity: 0.9; } 100% { transform: translateY(110vh) rotate(360deg); opacity: 0; } }
-
-    /* Thought Panel */
     .thought-panel { position: fixed; right: 0; top: 0; bottom: 0; width: 420px; max-width: 90vw; background: var(--bg-secondary); border-left: 1px solid var(--border-color); z-index: 500; transform: translateX(100%); transition: transform 0.3s ease; display: flex; flex-direction: column; }
     .thought-panel.open { transform: translateX(0); }
     .thought-panel-header { padding: 1rem 1.5rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
@@ -353,61 +328,56 @@
             <span id="selectedModelIcon" class="model-icon">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10H12V2z"/><path d="M12 2a10 10 0 0 1 10 10h-10V2z"/></svg>
             </span>
-            <span id="selectedModelName">Qwen 3.6 Plus Free</span> ▾
+            <span id="selectedModelName">⚡ OpenRouter Free Router</span> ▾
           </button>
           <div class="model-dropdown" id="modelDropdown">
-            <div class="model-option active" data-model="qwen/qwen3.6-plus:free" data-name="Qwen 3.6 Plus Free" data-desc="Best Free Model • 1M context">
-              <div class="model-icon">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10H12V2z"/><path d="M12 2a10 10 0 0 1 10 10h-10V2z"/></svg>
-              </div>
+            <div class="model-option active" data-model="openrouter/free" data-name="⚡ OpenRouter Free Router" data-desc="Auto-selects best free model • Fastest">
+              <div class="model-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
               <div class="model-info">
-                <div class="model-name">Qwen 3.6 Plus Free</div>
-                <div class="model-desc">Best Free Model • 1M context</div>
+                <div class="model-name">⚡ OpenRouter Free Router</div>
+                <div class="model-desc">Auto-selects best free model • Fastest</div>
               </div>
             </div>
-            <div class="model-option" data-model="meta-llama/llama-3.3-70b-instruct:free" data-name="Llama 3.3 Free" data-desc="Great All-Rounder • 128K context">
-              <div class="model-icon">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 10 10h-10V2z"/></svg>
-              </div>
+            <div class="model-option" data-model="qwen/qwen3.6-plus:free" data-name="🤖 Qwen 3.6 Plus Free" data-desc="Rivals Claude Sonnet • 1M context">
+              <div class="model-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10H12V2z"/><path d="M12 2a10 10 0 0 1 10 10h-10V2z"/></svg></div>
               <div class="model-info">
-                <div class="model-name">Llama 3.3 Free</div>
-                <div class="model-desc">Great All-Rounder • 128K context</div>
+                <div class="model-name">🤖 Qwen 3.6 Plus Free</div>
+                <div class="model-desc">Rivals Claude Sonnet • 1M context</div>
               </div>
             </div>
-            <div class="model-option" data-model="mistralai/mistral-small-24b-instruct-2501:free" data-name="Mistral Small Free" data-desc="Fast & Efficient • 32K context">
-              <div class="model-icon">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-              </div>
+            <div class="model-option" data-model="nvidia/nemotron-3-super-120b-a12b:free" data-name="🧠 Nemotron 3 Super Free" data-desc="Rivals Gemini Pro • Reasoning Expert">
+              <div class="model-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg></div>
               <div class="model-info">
-                <div class="model-name">Mistral Small Free</div>
-                <div class="model-desc">Fast & Efficient • 32K context</div>
+                <div class="model-name">🧠 Nemotron 3 Super Free</div>
+                <div class="model-desc">Rivals Gemini Pro • Reasoning Expert</div>
               </div>
             </div>
-            <div class="model-option" data-model="nvidia/nemotron-3-super-120b-a12b:free" data-name="Nemotron 3 Super Free" data-desc="Multi-Agent • 1M context">
-              <div class="model-icon">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
-              </div>
+            <div class="model-option" data-model="stepfun/step-3.5-flash:free" data-name=" Step 3.5 Flash Free" data-desc="Rivals Grok Fast • Ultra-speed">
+              <div class="model-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
               <div class="model-info">
-                <div class="model-name">Nemotron 3 Super Free</div>
-                <div class="model-desc">Multi-Agent • 1M context</div>
+                <div class="model-name">🚀 Step 3.5 Flash Free</div>
+                <div class="model-desc">Rivals Grok Fast • Ultra-speed</div>
               </div>
             </div>
-            <div class="model-option" data-model="stepfun/step-3.5-flash:free" data-name="Step 3.5 Flash Free" data-desc="Ultra-Fast Reasoning">
-              <div class="model-icon">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-              </div>
+            <div class="model-option" data-model="minimax/minimax-m2.5:free" data-name="📊 MiniMax M2.5 Free" data-desc="Rivals Gemini Pro • Productivity">
+              <div class="model-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10H12V2z"/><path d="M12 2a10 10 0 0 1 10 10h-10V2z"/></svg></div>
               <div class="model-info">
-                <div class="model-name">Step 3.5 Flash Free</div>
-                <div class="model-desc">Ultra-Fast Reasoning</div>
+                <div class="model-name">📊 MiniMax M2.5 Free</div>
+                <div class="model-desc">Rivals Gemini Pro • Productivity</div>
               </div>
             </div>
-            <div class="model-option" data-model="google/gemma-3-1b-it:free" data-name="Gemma 3 1B Free" data-desc="Lightweight & Fast">
-              <div class="model-icon">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10H12V2z"/><path d="M12 2a10 10 0 0 1 10 10h-10V2z"/></svg>
-              </div>
+            <div class="model-option" data-model="arcee-ai/trinity-large-preview:free" data-name="✨ Trinity Large Free" data-desc="Creative & Storytelling • 128k">
+              <div class="model-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 10 10h-10V2z"/></svg></div>
               <div class="model-info">
-                <div class="model-name">Gemma 3 1B Free</div>
-                <div class="model-desc">Lightweight & Fast</div>
+                <div class="model-name">✨ Trinity Large Free</div>
+                <div class="model-desc">Creative & Storytelling • 128k</div>
+              </div>
+            </div>
+            <div class="model-option" data-model="arcee-ai/trinity-mini:free" data-name="⚡ Trinity Mini Free" data-desc="Lightweight & Fast • 131k">
+              <div class="model-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+              <div class="model-info">
+                <div class="model-name">⚡ Trinity Mini Free</div>
+                <div class="model-desc">Lightweight & Fast • 131k</div>
               </div>
             </div>
           </div>
@@ -430,7 +400,7 @@
     <div class="chat-container" id="chatContainer">
       <div class="welcome" id="welcomeScreen">
         <h2>👋 Welcome to KJ AI</h2>
-        <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Choose a model or enable Collaborative mode for multi-AI discussions</p>
+        <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Verified Free Models • No API Key Required</p>
         <div class="suggestions">
           <button class="suggestion-chip" onclick="useSuggestion('Explain quantum computing')">Quantum computing</button>
           <button class="suggestion-chip" onclick="useSuggestion('Write a Python function to sort a list')">Python code</button>
@@ -553,20 +523,21 @@
 // CONFIGURATION
 const API_URL = 'https://kj-ai-proxy.babydripson.workers.dev';
 
-// Model definitions
+// Model definitions (All verified FREE)
 const MODELS = [
-  { id: 'qwen/qwen3.6-plus:free', name: 'Qwen 3.6 Plus Free', desc: 'Best Free Model' },
-  { id: 'meta-llama/llama-3.3-70b-instruct:free', name: 'Llama 3.3 Free', desc: 'Great All-Rounder' },
-  { id: 'mistralai/mistral-small-24b-instruct-2501:free', name: 'Mistral Small Free', desc: 'Fast & Efficient' },
-  { id: 'nvidia/nemotron-3-super-120b-a12b:free', name: 'Nemotron 3 Super Free', desc: 'Multi-Agent' },
-  { id: 'stepfun/step-3.5-flash:free', name: 'Step 3.5 Flash Free', desc: 'Ultra-Fast Reasoning' },
-  { id: 'google/gemma-3-1b-it:free', name: 'Gemma 3 1B Free', desc: 'Lightweight & Fast' }
+  { id: 'openrouter/free', name: '⚡ OpenRouter Free Router', desc: 'Auto-selects best free model' },
+  { id: 'qwen/qwen3.6-plus:free', name: '🤖 Qwen 3.6 Plus Free', desc: 'Rivals Claude Sonnet' },
+  { id: 'nvidia/nemotron-3-super-120b-a12b:free', name: '🧠 Nemotron 3 Super Free', desc: 'Rivals Gemini Pro' },
+  { id: 'stepfun/step-3.5-flash:free', name: '🚀 Step 3.5 Flash Free', desc: 'Rivals Grok Fast' },
+  { id: 'minimax/minimax-m2.5:free', name: '📊 MiniMax M2.5 Free', desc: 'Rivals Gemini Pro' },
+  { id: 'arcee-ai/trinity-large-preview:free', name: '✨ Trinity Large Free', desc: 'Creative & Storytelling' },
+  { id: 'arcee-ai/trinity-mini:free', name: '⚡ Trinity Mini Free', desc: 'Lightweight & Fast' }
 ];
 
 // STATE
 const state = {
-  model: 'qwen/qwen3.6-plus:free',
-  modelName: 'Qwen 3.6 Plus Free',
+  model: 'openrouter/free',
+  modelName: '⚡ OpenRouter Free Router',
   theme: localStorage.getItem('kjai-theme') || 'purple',
   isGenerating: false,
   lastMsgTime: 0,
@@ -579,7 +550,6 @@ const state = {
   deleteTargetId: null,
   pausedForBackground: false,
   generationQueue: [],
-  pendingPrompts: [],
   currentController: null,
   responseHistory: {},
   currentResponseIndex: {}
@@ -587,7 +557,7 @@ const state = {
 
 // INIT
 document.addEventListener('DOMContentLoaded', () => {
-  console.log('KJ AI v4 Started ✅');
+  console.log('KJ AI v5 Started ✅');
   applyTheme(state.theme);
   setupEvents();
   renderChatHistory();
@@ -649,7 +619,6 @@ function setupEvents() {
     }
   });
 
-  // Background visibility handling
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) {
       if (state.isGenerating) {
@@ -663,7 +632,6 @@ function setupEvents() {
     }
   });
 
-  // Tab close handling
   window.addEventListener('beforeunload', () => {
     if (state.currentController) {
       state.currentController.abort();
@@ -671,7 +639,6 @@ function setupEvents() {
   });
 }
 
-// Chat naming
 function showNameChatModal() {
   const modal = document.getElementById('nameChatModal');
   modal.classList.add('active');
@@ -783,36 +750,15 @@ function loadChat(id) {
   scrollToBottom();
 }
 
-function deleteChat(id) {
-  if (!confirm('Delete this chat?')) return;
-  state.chats = state.chats.filter(c => c.id !== id);
-  if (state.currentChatId === id) {
-    state.currentChatId = null;
-    document.getElementById('chatContainer').innerHTML = `
-      <div class="welcome" id="welcomeScreen">
-        <h2>👋 Welcome to KJ AI</h2>
-        <div class="suggestions">
-          <button class="suggestion-chip" onclick="useSuggestion('Explain quantum computing')">Quantum computing</button>
-          <button class="suggestion-chip" onclick="useSuggestion('Write Python code')">Python code</button>
-        </div>
-      </div>
-    `;
-  }
-  saveChats();
-  renderChatHistory();
-}
-
 function saveChats() {
   localStorage.setItem('kjai-chats', JSON.stringify(state.chats));
 }
 
-// Collaborative Mode Toggle
 function toggleCollabMode() {
   state.collaborativeMode = !state.collaborativeMode;
   document.getElementById('collabToggle').classList.toggle('active', state.collaborativeMode);
 }
 
-// Thought Panel Toggle
 function toggleThoughtPanel() {
   state.thoughtPanelOpen = !state.thoughtPanelOpen;
   document.getElementById('thoughtPanel').classList.toggle('open', state.thoughtPanelOpen);
@@ -820,13 +766,7 @@ function toggleThoughtPanel() {
 }
 
 function addThought(sender, avatar, text, isConsensus = false) {
-  const thought = {
-    sender,
-    avatar,
-    text,
-    time: new Date().toLocaleTimeString(),
-    isConsensus
-  };
+  const thought = { sender, avatar, text, time: new Date().toLocaleTimeString(), isConsensus };
   state.thoughts.push(thought);
   renderThoughts();
 }
@@ -854,7 +794,6 @@ function renderThoughts() {
   body.scrollTop = body.scrollHeight;
 }
 
-// Send Message
 async function sendMessage() {
   const input = document.getElementById('promptInput');
   const prompt = input.value.trim();
@@ -914,10 +853,8 @@ async function sendMessage() {
   }
 }
 
-// Single Model Message
 async function sendSingleMessage(prompt) {
   const history = getChatHistoryForAPI();
-  
   state.currentController = new AbortController();
   
   try {
@@ -956,7 +893,7 @@ async function sendSingleMessage(prompt) {
       buffer = lines.pop();
       
       for (const line of lines) {
-        // FIXED: Look for 'data: ' instead of ' '
+        // FIXED: Look for 'data: ' prefix for SSE
         if (line.startsWith('data: ')) {
           const data = line.slice(6);
           if (data === '[DONE]') continue;
@@ -1002,12 +939,10 @@ async function sendSingleMessage(prompt) {
   }
 }
 
-// Collaborative Mode Message with Real Conversation
 async function sendCollaborativeMessage(prompt) {
   const history = getChatHistoryForAPI();
   const initialThoughts = [];
   
-  // Step 1: Each model gives initial thoughts
   for (const model of MODELS) {
     state.currentController = new AbortController();
     const thinkingId = addThinkingMessage(model.name, 'ai');
@@ -1048,19 +983,8 @@ async function sendCollaborativeMessage(prompt) {
     }
   }
   
-  // Step 2: Models discuss and build on each other
-  const discussionPrompt = `You are participating in a collaborative AI discussion. Here are the initial thoughts from each model:
-
-${initialThoughts.map(it => `${it.model.name}: ${it.response}`).join('\n\n')}
-
-As ${state.modelName}, please:
-1. Analyze the different perspectives
-2. Build on good ideas
-3. Question weak points
-4. Work toward a consensus
-
-Be constructive and concise.`;
-
+  const discussionPrompt = `AI Discussion so far:\n${initialThoughts.map(it => `${it.model.name}: ${it.response}`).join('\n\n')}\n\nAs ${state.modelName}, please analyze perspectives, build on ideas, and reach a consensus.`;
+  
   state.currentController = new AbortController();
   const thinkingId = addThinkingMessage('Discussion', 'ai');
   
@@ -1068,16 +992,11 @@ Be constructive and concise.`;
     const res = await fetch(API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        prompt: discussionPrompt,
-        model: state.model,
-        history
-      }),
+      body: JSON.stringify({ prompt: discussionPrompt, model: state.model, history }),
       signal: state.currentController.signal
     });
     
     removeThinkingMessage(thinkingId);
-    
     if (!res.ok) throw new Error(`Server error: ${res.status}`);
     
     const msgId = addMessage('', 'ai', 'ai', true, 'Collaborative Consensus');
@@ -1136,7 +1055,6 @@ Be constructive and concise.`;
   }
 }
 
-// Thinking Message with Lightbulb
 function addThinkingMessage(sender, avatar) {
   const chat = document.getElementById('chatContainer');
   const id = 'thinking-' + Date.now();
@@ -1167,7 +1085,6 @@ function removeThinkingMessage(id) {
   if (el) el.remove();
 }
 
-// Add Message
 function addMessage(text, sender, avatar = null, returnId = false, senderName = null, isError = false) {
   const chat = document.getElementById('chatContainer');
   const id = returnId ? 'msg-' + Date.now() : '';
@@ -1306,19 +1223,9 @@ function retryMsg(id) {
   }
 }
 
-// Markdown Parser with Strict Laugh Emoji Fix
 function parseMarkdown(text, msgId = null) {
   if (!text) return '';
   let h = text;
-  
-  // Strict laugh emoji check (ONLY 😂 and 🤣)
-  if (msgId) {
-    const el = document.getElementById(msgId);
-    if (el && !el.dataset.laughterTriggered && /[😂🤣]/.test(h)) {
-      triggerEmojiRain();
-      el.dataset.laughterTriggered = 'true';
-    }
-  }
   
   // Code blocks
   h = h.replace(/```(\w+)?\n?([\s\S]*?)```/g, (match, lang, code) => {
@@ -1404,25 +1311,6 @@ function copyCodeBlock(id) {
       }, 2000);
     });
   });
-}
-
-function triggerEmojiRain() {
-  const container = document.createElement('div');
-  container.className = 'emoji-rain';
-  document.body.appendChild(container);
-  
-  const emojis = ['😂', '🤣'];
-  for (let i = 0; i < 25; i++) {
-    const span = document.createElement('span');
-    span.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-    span.style.left = Math.random() * 100 + 'vw';
-    span.style.animationDuration = (Math.random() * 1.5 + 1.5) + 's';
-    span.style.animationDelay = (Math.random() * 0.8) + 's';
-    span.style.fontSize = (Math.random() * 1.5 + 1.5) + 'rem';
-    container.appendChild(span);
-  }
-  
-  setTimeout(() => container.remove(), 3500);
 }
 
 function escapeHtml(t) { const d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
