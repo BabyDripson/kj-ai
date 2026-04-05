@@ -151,7 +151,7 @@
     .message.error { margin-left: auto; flex-direction: row-reverse; }
     .message-avatar { width: 36px; height: 36px; border-radius: var(--radius-sm); display: grid; place-items: center; flex-shrink: 0; background: var(--bg-tertiary); border: 1px solid var(--border-color); }
     .message-avatar svg { width: 20px; height: 20px; }
-    .message-wrapper { flex: 1; min-width: 0; max-width: 75vw; }
+    .message-wrapper { flex: 1; min-width: 0; max-width: 75vw; position: relative; }
     .message-content-wrapper { position: relative; }
     .message-sender { font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 0.25rem; display: flex; align-items: center; gap: 0.5rem; }
     .message-tag { background: var(--bg-tertiary); padding: 0.15rem 0.5rem; border-radius: var(--radius-full); font-size: 0.7rem; color: var(--text-muted); }
@@ -162,7 +162,22 @@
     .message-content p { margin: 0.5rem 0; } .message-content p:first-child { margin-top: 0; }
     .message-content code { font-family: var(--font-mono); background: var(--bg-secondary); padding: 0.2rem 0.4rem; border-radius: 4px; font-size: 0.85em; color: var(--accent-primary); }
     .message-content pre { margin: 0; }
+    .message-content img { max-width: 100%; border-radius: var(--radius-sm); margin: 0.5rem 0; }
     
+    /* Context Menu */
+    .context-menu {
+      position: fixed; z-index: 2000; background: var(--bg-secondary); border: 1px solid var(--border-color);
+      border-radius: var(--radius-md); box-shadow: 0 10px 25px rgba(0,0,0,0.2); padding: 0.5rem; min-width: 160px;
+      display: none; animation: fadeIn 0.15s ease;
+    }
+    .context-menu button {
+      width: 100%; text-align: left; background: none; border: none; padding: 0.6rem 0.8rem;
+      border-radius: var(--radius-sm); cursor: pointer; font-size: 0.85rem; color: var(--text-primary);
+      display: flex; align-items: center; gap: 0.5rem; transition: background 0.2s;
+    }
+    .context-menu button:hover { background: var(--bg-tertiary); }
+    .context-menu button svg { width: 14px; height: 14px; }
+
     .copy-overlay {
       position: absolute; top: -40px; right: 0;
       background: var(--accent-primary); color: white; padding: 0.4rem 0.8rem;
@@ -296,7 +311,7 @@
   
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
-      <button class="new-chat-btn" onclick="showNameChatModal()">
+      <button class="new-chat-btn" onclick="handleNewChat()">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
         New Chat
       </button>
@@ -316,7 +331,6 @@
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
       </button>
       
-      <!-- Gengar Logo -->
       <div style="display: flex; align-items: center; gap: 0.75rem;">
         <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/94.png" alt="Gengar" style="width: 48px; height: 48px; image-rendering: auto; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));">
         <span style="font-weight: 700; font-size: 1.1rem; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">KJ AI</span>
@@ -352,7 +366,7 @@
                 <div class="model-desc">Rivals Gemini Pro • Reasoning Expert</div>
               </div>
             </div>
-            <div class="model-option" data-model="stepfun/step-3.5-flash:free" data-name=" Step 3.5 Flash Free" data-desc="Rivals Grok Fast • Ultra-speed">
+            <div class="model-option" data-model="stepfun/step-3.5-flash:free" data-name="🚀 Step 3.5 Flash Free" data-desc="Rivals Grok Fast • Ultra-speed">
               <div class="model-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
               <div class="model-info">
                 <div class="model-name">🚀 Step 3.5 Flash Free</div>
@@ -404,7 +418,7 @@
         <div class="suggestions">
           <button class="suggestion-chip" onclick="useSuggestion('Explain quantum computing')">Quantum computing</button>
           <button class="suggestion-chip" onclick="useSuggestion('Write a Python function to sort a list')">Python code</button>
-          <button class="suggestion-chip" onclick="useSuggestion('Help me debug this JavaScript')">Debug JS</button>
+          <button class="suggestion-chip" onclick="useSuggestion('/img A futuristic cyberpunk city at night')">Generate Image</button>
           <button class="suggestion-chip" onclick="useSuggestion('Create a React component for a dashboard')">React component</button>
         </div>
       </div>
@@ -418,7 +432,7 @@
       <div class="input-wrapper">
         <div class="cooldown-msg" id="cooldownMsg">⚠️ Please wait <span id="cooldownTime">3</span>s</div>
         <div class="input-row">
-          <textarea id="promptInput" class="prompt-input" placeholder="Message KJ AI..." rows="1"></textarea>
+          <textarea id="promptInput" class="prompt-input" placeholder="Message KJ AI... (use /img for images)" rows="1"></textarea>
           <button class="send-btn" id="sendBtn" onclick="sendMessage()">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
           </button>
@@ -427,6 +441,13 @@
       </div>
     </div>
   </main>
+
+  <!-- Context Menu -->
+  <div class="context-menu" id="contextMenu">
+    <button onclick="contextAction('copy')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copy</button>
+    <button onclick="contextAction('edit')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> Edit</button>
+    <button onclick="contextAction('select')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> Select Text</button>
+  </div>
 
   <!-- Thought Process Panel -->
   <div class="thought-panel-overlay" id="thoughtOverlay" onclick="toggleThoughtPanel()"></div>
@@ -523,7 +544,6 @@
 // CONFIGURATION
 const API_URL = 'https://kj-ai-proxy.babydripson.workers.dev';
 
-// Model definitions (All verified FREE)
 const MODELS = [
   { id: 'openrouter/free', name: '⚡ OpenRouter Free Router', desc: 'Auto-selects best free model' },
   { id: 'qwen/qwen3.6-plus:free', name: '🤖 Qwen 3.6 Plus Free', desc: 'Rivals Claude Sonnet' },
@@ -534,7 +554,6 @@ const MODELS = [
   { id: 'arcee-ai/trinity-mini:free', name: '⚡ Trinity Mini Free', desc: 'Lightweight & Fast' }
 ];
 
-// STATE
 const state = {
   model: 'openrouter/free',
   modelName: '⚡ OpenRouter Free Router',
@@ -552,12 +571,12 @@ const state = {
   generationQueue: [],
   currentController: null,
   responseHistory: {},
-  currentResponseIndex: {}
+  currentResponseIndex: {},
+  contextTargetId: null
 };
 
-// INIT
 document.addEventListener('DOMContentLoaded', () => {
-  console.log('KJ AI v5 Started ✅');
+  console.log('KJ AI v6 Started ✅');
   applyTheme(state.theme);
   setupEvents();
   renderChatHistory();
@@ -568,6 +587,7 @@ function setupEvents() {
   const input = document.getElementById('promptInput');
   const sendBtn = document.getElementById('sendBtn');
   const chat = document.getElementById('chatContainer');
+  const contextMenu = document.getElementById('contextMenu');
   
   input.addEventListener('input', () => {
     input.style.height = 'auto';
@@ -588,13 +608,33 @@ function setupEvents() {
     btn.classList.toggle('visible', !isAtBottom);
   });
   
+  // Long press / Right click for context menu
+  let pressTimer;
+  document.addEventListener('mousedown', (e) => {
+    const wrapper = e.target.closest('.message-wrapper');
+    if (wrapper) {
+      pressTimer = setTimeout(() => showContextMenu(e, wrapper), 500);
+    }
+  });
+  document.addEventListener('mouseup', () => clearTimeout(pressTimer));
+  document.addEventListener('touchstart', (e) => {
+    const wrapper = e.target.closest('.message-wrapper');
+    if (wrapper) {
+      pressTimer = setTimeout(() => showContextMenu(e.touches[0], wrapper), 500);
+    }
+  });
+  document.addEventListener('touchend', () => clearTimeout(pressTimer));
+  document.addEventListener('contextmenu', (e) => {
+    const wrapper = e.target.closest('.message-wrapper');
+    if (wrapper) {
+      e.preventDefault();
+      showContextMenu(e, wrapper);
+    }
+  });
   document.addEventListener('click', (e) => {
-    if (!e.target.closest('.model-wrapper')) {
-      document.getElementById('modelDropdown').classList.remove('active');
-    }
-    if (e.target.classList.contains('modal-overlay')) {
-      e.target.classList.remove('active');
-    }
+    if (!e.target.closest('.context-menu')) contextMenu.style.display = 'none';
+    if (!e.target.closest('.model-wrapper')) document.getElementById('modelDropdown').classList.remove('active');
+    if (e.target.classList.contains('modal-overlay')) e.target.classList.remove('active');
   });
   
   document.querySelectorAll('.model-option').forEach(opt => {
@@ -633,10 +673,71 @@ function setupEvents() {
   });
 
   window.addEventListener('beforeunload', () => {
-    if (state.currentController) {
-      state.currentController.abort();
-    }
+    if (state.currentController) state.currentController.abort();
   });
+}
+
+function showContextMenu(e, wrapper) {
+  const menu = document.getElementById('contextMenu');
+  state.contextTargetId = wrapper.closest('.message').id;
+  
+  const x = e.clientX || e.pageX;
+  const y = e.clientY || e.pageY;
+  
+  menu.style.left = `${Math.min(x, window.innerWidth - 180)}px`;
+  menu.style.top = `${Math.min(y, window.innerHeight - 150)}px`;
+  menu.style.display = 'block';
+}
+
+function contextAction(action) {
+  const menu = document.getElementById('contextMenu');
+  menu.style.display = 'none';
+  const msg = document.getElementById(state.contextTargetId);
+  if (!msg) return;
+  
+  const content = msg.querySelector('.message-content');
+  const text = content.textContent;
+  
+  if (action === 'copy') {
+    navigator.clipboard.writeText(text).then(() => {
+      const overlay = msg.querySelector('.copy-overlay');
+      if (overlay) {
+        const orig = overlay.innerHTML;
+        overlay.innerHTML = '✓ Copied!';
+        setTimeout(() => overlay.innerHTML = orig, 2000);
+      }
+    });
+  } else if (action === 'edit') {
+    const input = document.getElementById('promptInput');
+    input.value = text;
+    input.dispatchEvent(new Event('input'));
+    input.focus();
+    msg.remove();
+    // Remove from chat history
+    if (state.currentChatId) {
+      const chat = state.chats.find(c => c.id === state.currentChatId);
+      if (chat) {
+        chat.messages = chat.messages.filter(m => !(m.role === 'user' && m.content === text));
+        saveChats();
+      }
+    }
+  } else if (action === 'select') {
+    const range = document.createRange();
+    range.selectNodeContents(content);
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+  }
+}
+
+function handleNewChat() {
+  if (state.isGenerating && state.currentController) {
+    state.currentController.abort();
+    state.isGenerating = false;
+    document.getElementById('promptInput').disabled = false;
+    document.getElementById('sendBtn').disabled = false;
+  }
+  showNameChatModal();
 }
 
 function showNameChatModal() {
@@ -658,13 +759,7 @@ function confirmNewChat() {
   const name = input.value.trim();
   if (!name) { input.focus(); return; }
   
-  const chat = {
-    id: Date.now().toString(),
-    name: name,
-    messages: [],
-    timestamp: new Date().toISOString()
-  };
-  
+  const chat = { id: Date.now().toString(), name, messages: [], timestamp: new Date().toISOString() };
   state.chats.unshift(chat);
   saveChats();
   renderChatHistory();
@@ -737,11 +832,11 @@ function loadChat(id) {
     chat.messages.forEach(msg => {
       if (msg.role === 'user') {
         addMessage(msg.content, 'user', null, false);
+      } else if (msg.type === 'image') {
+        addImageMessage(msg.content, 'ai', '🖼️', true, msg.sender || 'Image Gen');
       } else {
-        const avatar = msg.avatar || 'ai';
-        const sender = msg.sender || state.modelName;
-        const msgId = addMessage(msg.content, 'ai', avatar, true, sender, msg.isError);
-        if (!msg.isError) addMessageActions(msgId);
+        addMessage(msg.content, 'ai', msg.avatar || 'ai', true, msg.sender || state.modelName, msg.isError);
+        if (!msg.isError) addMessageActions(msg.id || '');
       }
     });
   }
@@ -796,8 +891,18 @@ function renderThoughts() {
 
 async function sendMessage() {
   const input = document.getElementById('promptInput');
-  const prompt = input.value.trim();
+  let prompt = input.value.trim();
   if (!prompt || state.isGenerating) return;
+  
+  // Check for image generation command
+  if (prompt.startsWith('/img ')) {
+    input.value = '';
+    input.style.height = 'auto';
+    document.getElementById('sendBtn').disabled = true;
+    addMessage(prompt, 'user', null, false);
+    await generateImage(prompt.slice(5));
+    return;
+  }
   
   const now = Date.now();
   if (now - state.lastMsgTime < state.cooldown) {
@@ -881,10 +986,7 @@ async function sendSingleMessage(prompt) {
     let fullText = '';
     
     while (true) {
-      if (state.pausedForBackground) {
-        await new Promise(r => setTimeout(r, 500));
-        continue;
-      }
+      if (state.pausedForBackground) { await new Promise(r => setTimeout(r, 500)); continue; }
       const { done, value } = await reader.read();
       if (done) break;
       
@@ -893,8 +995,7 @@ async function sendSingleMessage(prompt) {
       buffer = lines.pop();
       
       for (const line of lines) {
-        // FIXED: Look for 'data: ' prefix for SSE
-        if (line.startsWith('data: ')) {
+        if (line.startsWith(' ')) {
           const data = line.slice(6);
           if (data === '[DONE]') continue;
           try {
@@ -910,9 +1011,7 @@ async function sendSingleMessage(prompt) {
       }
     }
     
-    if (!fullText.trim()) {
-      contentEl.innerHTML = '<em style="color: var(--text-muted);">No response generated.</em>';
-    }
+    if (!fullText.trim()) contentEl.innerHTML = '<em style="color: var(--text-muted);">No response generated.</em>';
     
     state.responseHistory[msgId].push(fullText);
     state.currentResponseIndex[msgId] = state.responseHistory[msgId].length - 1;
@@ -923,7 +1022,7 @@ async function sendSingleMessage(prompt) {
     if (state.currentChatId) {
       const chat = state.chats.find(c => c.id === state.currentChatId);
       if (chat) {
-        chat.messages.push({ role: 'assistant', content: fullText, sender: state.modelName, avatar: 'ai' });
+        chat.messages.push({ role: 'assistant', content: fullText, sender: state.modelName, avatar: 'ai', id: msgId });
         saveChats();
       }
     }
@@ -950,11 +1049,7 @@ async function sendCollaborativeMessage(prompt) {
       const res = await fetch(API_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          prompt: `You are ${model.name}. Analyze: "${prompt}". Give concise initial perspective.`,
-          model: model.id,
-          history
-        }),
+        body: JSON.stringify({ prompt: `You are ${model.name}. Analyze: "${prompt}". Give concise initial perspective.`, model: model.id, history }),
         signal: state.currentController.signal
       });
       removeThinkingMessage(thinkingId);
@@ -963,7 +1058,7 @@ async function sendCollaborativeMessage(prompt) {
         let modelResponse = '';
         const lines = text.split('\n');
         for (const line of lines) {
-          if (line.startsWith('data: ')) {
+          if (line.startsWith(' ')) {
             const data = line.slice(6);
             if (data === '[DONE]') continue;
             try {
@@ -978,21 +1073,20 @@ async function sendCollaborativeMessage(prompt) {
           addThought(model.name, 'ai', modelResponse);
         }
       }
-    } catch (err) {
-      removeThinkingMessage(thinkingId);
-    }
+    } catch (err) { removeThinkingMessage(thinkingId); }
   }
   
-  const discussionPrompt = `AI Discussion so far:\n${initialThoughts.map(it => `${it.model.name}: ${it.response}`).join('\n\n')}\n\nAs ${state.modelName}, please analyze perspectives, build on ideas, and reach a consensus.`;
+  // FINAL SYNTHESIS: This fixes the bug where no answer was output
+  const synthesisPrompt = `Based on the following AI analyses:\n${initialThoughts.map(it => `${it.model.name}: ${it.response}`).join('\n\n')}\n\nPlease provide a comprehensive, direct answer to the original prompt: "${prompt}". Synthesize the best insights, resolve contradictions, and give a clear final response.`;
   
   state.currentController = new AbortController();
-  const thinkingId = addThinkingMessage('Discussion', 'ai');
+  const thinkingId = addThinkingMessage('Synthesizing Answer', 'ai');
   
   try {
     const res = await fetch(API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ prompt: discussionPrompt, model: state.model, history }),
+      body: JSON.stringify({ prompt: synthesisPrompt, model: state.model, history }),
       signal: state.currentController.signal
     });
     
@@ -1022,7 +1116,7 @@ async function sendCollaborativeMessage(prompt) {
       buffer = lines.pop();
       
       for (const line of lines) {
-        if (line.startsWith('data: ')) {
+        if (line.startsWith(' ')) {
           const data = line.slice(6);
           if (data === '[DONE]') continue;
           try {
@@ -1045,13 +1139,58 @@ async function sendCollaborativeMessage(prompt) {
     if (state.currentChatId) {
       const chat = state.chats.find(c => c.id === state.currentChatId);
       if (chat) {
-        chat.messages.push({ role: 'assistant', content: fullText, sender: 'Collaborative Consensus', avatar: 'ai', collaborative: true });
+        chat.messages.push({ role: 'assistant', content: fullText, sender: 'Collaborative Consensus', avatar: 'ai', collaborative: true, id: msgId });
         saveChats();
       }
     }
   } catch (err) {
     removeThinkingMessage(thinkingId);
     if (err.name !== 'AbortError') throw err;
+  }
+}
+
+async function generateImage(prompt) {
+  const imgId = `img-${Date.now()}`;
+  const msgEl = document.createElement('div');
+  msgEl.className = 'message ai';
+  msgEl.id = imgId;
+  msgEl.innerHTML = `
+    <div class="message-avatar">🖼️</div>
+    <div class="message-wrapper">
+      <div class="message-sender">Image Generator <span class="message-tag">Pollinations AI</span></div>
+      <div class="message-content" style="text-align:center; padding: 1rem;">
+        <div class="thinking-indicator"><div class="thinking-bulb"></div><span>Generating image...</span></div>
+      </div>
+    </div>
+  `;
+  document.getElementById('chatContainer').appendChild(msgEl);
+  scrollToBottom();
+  
+  try {
+    const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=1024&height=1024&nologo=true&seed=${Date.now()}`;
+    const img = new Image();
+    img.onload = () => {
+      const content = msgEl.querySelector('.message-content');
+      content.innerHTML = `<p style="margin-bottom:0.5rem; font-style:italic; opacity:0.8;">"${escapeHtml(prompt)}"</p><img src="${imageUrl}" alt="Generated Image" style="max-width:100%; border-radius:var(--radius-md); box-shadow:0 4px 12px rgba(0,0,0,0.2);">`;
+      
+      if (state.currentChatId) {
+        const chat = state.chats.find(c => c.id === state.currentChatId);
+        if (chat) {
+          chat.messages.push({ role: 'assistant', type: 'image', content: imageUrl, prompt, sender: 'Image Generator', avatar: '🖼️' });
+          saveChats();
+        }
+      }
+    };
+    img.onerror = () => {
+      msgEl.querySelector('.message-content').innerHTML = '<em style="color: var(--error-text);">❌ Failed to generate image.</em>';
+    };
+    img.src = imageUrl;
+  } catch (err) {
+    msgEl.querySelector('.message-content').innerHTML = `<em style="color: var(--error-text);">❌ ${err.message}</em>`;
+  } finally {
+    state.isGenerating = false;
+    document.getElementById('promptInput').disabled = false;
+    document.getElementById('sendBtn').disabled = false;
   }
 }
 
@@ -1062,17 +1201,10 @@ function addThinkingMessage(sender, avatar) {
   div.className = 'message ai';
   div.id = id;
   div.innerHTML = `
-    <div class="message-avatar">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10H12V2z"/><path d="M12 2a10 10 0 0 1 10 10h-10V2z"/></svg>
-    </div>
+    <div class="message-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10H12V2z"/><path d="M12 2a10 10 0 0 1 10 10h-10V2z"/></svg></div>
     <div class="message-wrapper">
       <div class="message-sender">${escapeHtml(sender)} <span class="message-tag">thinking...</span></div>
-      <div class="message-content">
-        <div class="thinking-indicator">
-          <div class="thinking-bulb"></div>
-          <span class="thinking-text">Processing context & generating response...</span>
-        </div>
-      </div>
+      <div class="message-content"><div class="thinking-indicator"><div class="thinking-bulb"></div><span class="thinking-text">Processing context & generating response...</span></div></div>
     </div>
   `;
   chat.appendChild(div);
@@ -1096,9 +1228,7 @@ function addMessage(text, sender, avatar = null, returnId = false, senderName = 
   const displayName = senderName || (sender === 'user' ? 'You' : state.modelName);
   
   let senderHtml = '';
-  if (sender === 'ai') {
-    senderHtml = `<div class="message-sender">${escapeHtml(displayName)} <span class="message-tag">${state.modelName}</span></div>`;
-  }
+  if (sender === 'ai') senderHtml = `<div class="message-sender">${escapeHtml(displayName)} <span class="message-tag">${state.modelName}</span></div>`;
   
   const userIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>`;
   const aiIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10H12V2z"/><path d="M12 2a10 10 0 0 1 10 10h-10V2z"/></svg>`;
@@ -1117,6 +1247,27 @@ function addMessage(text, sender, avatar = null, returnId = false, senderName = 
   return returnId ? id : null;
 }
 
+function addImageMessage(url, sender, avatar, returnId, senderName) {
+  const chat = document.getElementById('chatContainer');
+  const id = returnId ? 'msg-' + Date.now() : '';
+  const div = document.createElement('div');
+  div.className = `message ${sender}`;
+  if (returnId) div.id = id;
+  
+  div.innerHTML = `
+    <div class="message-avatar">${avatar}</div>
+    <div class="message-wrapper">
+      <div class="message-sender">${escapeHtml(senderName)} <span class="message-tag">Image</span></div>
+      <div class="message-content" style="text-align:center;">
+        <p style="margin-bottom:0.5rem; font-style:italic; opacity:0.8;">"Generated Image"</p>
+        <img src="${url}" alt="Generated Image" style="max-width:100%; border-radius:var(--radius-md); box-shadow:0 4px 12px rgba(0,0,0,0.2);">
+      </div>
+    </div>
+  `;
+  chat.appendChild(div);
+  scrollToBottom();
+}
+
 function copyMessageText(id) {
   const msg = document.getElementById(id);
   if (!msg) return;
@@ -1127,7 +1278,7 @@ function copyMessageText(id) {
     if (overlay) {
       const orig = overlay.innerHTML;
       overlay.innerHTML = '✓ Copied!';
-      setTimeout(() => { overlay.innerHTML = orig; }, 2000);
+      setTimeout(() => overlay.innerHTML = orig, 2000);
     }
   });
 }
@@ -1147,7 +1298,6 @@ function addMessageActions(id) {
 function addResponseNavigation(msgId) {
   const wrapper = document.querySelector(`#${msgId} .message-wrapper`);
   if (!wrapper) return;
-  
   const nav = document.createElement('div');
   nav.className = 'response-nav';
   nav.id = `nav-${msgId}`;
@@ -1166,11 +1316,9 @@ function addResponseNavigation(msgId) {
 function updateResponseNavigation(msgId) {
   const responses = state.responseHistory[msgId] || [];
   const currentIndex = state.currentResponseIndex[msgId] || 0;
-  
   const prevBtn = document.getElementById(`prev-${msgId}`);
   const nextBtn = document.getElementById(`next-${msgId}`);
   const counter = document.getElementById(`counter-${msgId}`);
-  
   if (prevBtn) prevBtn.disabled = currentIndex <= 0;
   if (nextBtn) nextBtn.disabled = currentIndex >= responses.length - 1;
   if (counter) counter.textContent = `${currentIndex + 1}/${responses.length}`;
@@ -1179,34 +1327,20 @@ function updateResponseNavigation(msgId) {
 function showResponse(msgId, index) {
   const responses = state.responseHistory[msgId] || [];
   if (index < 0 || index >= responses.length) return;
-  
   state.currentResponseIndex[msgId] = index;
   const contentEl = document.querySelector(`#${msgId} .message-content`);
-  if (contentEl) {
-    contentEl.innerHTML = parseMarkdown(responses[index], msgId);
-  }
+  if (contentEl) contentEl.innerHTML = parseMarkdown(responses[index], msgId);
   updateResponseNavigation(msgId);
 }
 
-function prevResponse(msgId) {
-  const currentIndex = state.currentResponseIndex[msgId] || 0;
-  showResponse(msgId, currentIndex - 1);
-}
-
-function nextResponse(msgId) {
-  const currentIndex = state.currentResponseIndex[msgId] || 0;
-  showResponse(msgId, currentIndex + 1);
-}
+function prevResponse(msgId) { showResponse(msgId, (state.currentResponseIndex[msgId] || 0) - 1); }
+function nextResponse(msgId) { showResponse(msgId, (state.currentResponseIndex[msgId] || 0) + 1); }
 
 function copyMsg(id) {
   const text = document.querySelector(`#${id} .message-content`).textContent;
   navigator.clipboard.writeText(text).then(() => {
     const btn = document.querySelector(`#${id} .action-btn`);
-    if (btn) {
-      const orig = btn.innerHTML;
-      btn.innerHTML = '✓ Copied';
-      setTimeout(() => { btn.innerHTML = orig; }, 2000);
-    }
+    if (btn) { const orig = btn.innerHTML; btn.innerHTML = '✓ Copied'; setTimeout(() => btn.innerHTML = orig, 2000); }
   });
 }
 
@@ -1216,8 +1350,7 @@ function retryMsg(id) {
     msg.remove();
     const prev = msg.previousElementSibling;
     if (prev && prev.classList.contains('user')) {
-      const prompt = prev.querySelector('.message-content').textContent;
-      document.getElementById('promptInput').value = prompt;
+      document.getElementById('promptInput').value = prev.querySelector('.message-content').textContent;
       sendMessage();
     }
   }
@@ -1226,46 +1359,25 @@ function retryMsg(id) {
 function parseMarkdown(text, msgId = null) {
   if (!text) return '';
   let h = text;
-  
-  // Code blocks
   h = h.replace(/```(\w+)?\n?([\s\S]*?)```/g, (match, lang, code) => {
     lang = lang || 'text';
     const id = 'code-' + Math.random().toString(36).substr(2, 9);
     return `<div class="code-block" id="${id}">
-      <div class="code-header">
-        <span class="code-lang">${lang}</span>
-        <div class="code-actions">
-          <button class="code-btn" onclick="copyCodeBlock('${id}')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-            Copy
-          </button>
-        </div>
-      </div>
+      <div class="code-header"><span class="code-lang">${lang}</span><div class="code-actions"><button class="code-btn" onclick="copyCodeBlock('${id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>Copy</button></div></div>
       <div class="code-body">${escapeHtml(code.trim())}</div>
     </div>`;
   });
-  
-  // File creation detection
   if (/create a? file/i.test(h) && h.includes('```')) {
     h = h.replace(/```(\w+)?\n?([\s\S]*?)```/g, (match, lang, code) => {
       lang = lang || 'txt';
       const id = 'file-' + Math.random().toString(36).substr(2, 9);
       const fileName = `kj-ai-${lang}-output.${lang === 'javascript' ? 'js' : lang === 'python' ? 'py' : lang}`;
       return `<div class="file-artifact" id="${id}">
-        <div class="file-header">
-          <span class="file-name">📄 ${fileName}</span>
-          <div class="file-actions">
-            <button class="file-btn" onclick="downloadFile('${id}', '${fileName}')">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
-              Download
-            </button>
-          </div>
-        </div>
+        <div class="file-header"><span class="file-name">📄 ${fileName}</span><div class="file-actions"><button class="file-btn" onclick="downloadFile('${id}', '${fileName}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>Download</button></div></div>
         <div class="file-body" data-content="${escapeHtml(code.trim())}">${escapeHtml(code.trim())}</div>
       </div>`;
     });
   }
-  
   h = h.replace(/`([^`]+)`/g, '<code>$1</code>');
   h = h.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
   h = h.replace(/\*(.+?)\*/g, '<em>$1</em>');
@@ -1277,21 +1389,13 @@ function parseMarkdown(text, msgId = null) {
 function downloadFile(id, fileName) {
   const body = document.querySelector(`#${id} .file-body`);
   if (!body) return;
-  const content = body.dataset.content || body.textContent;
-  const blob = new Blob([content], { type: 'text/plain' });
+  const blob = new Blob([body.dataset.content || body.textContent], { type: 'text/plain' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
-  a.href = url;
-  a.download = fileName;
-  a.click();
+  a.href = url; a.download = fileName; a.click();
   URL.revokeObjectURL(url);
-  
   const btn = document.querySelector(`#${id} .file-btn`);
-  if (btn) {
-    const orig = btn.innerHTML;
-    btn.innerHTML = '✓ Downloaded';
-    setTimeout(() => { btn.innerHTML = orig; }, 2000);
-  }
+  if (btn) { const orig = btn.innerHTML; btn.innerHTML = '✓ Downloaded'; setTimeout(() => btn.innerHTML = orig, 2000); }
 }
 
 function copyCodeBlock(id) {
@@ -1300,8 +1404,7 @@ function copyCodeBlock(id) {
   const code = block.querySelector('.code-body, .file-body').textContent;
   navigator.clipboard.writeText(code).then(() => {
     block.querySelectorAll('.code-btn, .file-btn').forEach(btn => {
-      btn.classList.add('copied');
-      btn.innerHTML = '✓ Copied';
+      btn.classList.add('copied'); btn.innerHTML = '✓ Copied';
       setTimeout(() => {
         btn.classList.remove('copied');
         const isHeader = btn.closest('.code-header, .file-header');
@@ -1326,21 +1429,10 @@ function useSuggestion(t) {
   i.value = t; i.dispatchEvent(new Event('input')); i.focus();
 }
 
-function toggleModelDropdown() {
-  document.getElementById('modelDropdown').classList.toggle('active');
-}
-
-function toggleSidebar() {
-  document.getElementById('sidebar').classList.toggle('open');
-}
-
-function openSettings() {
-  document.getElementById('settingsModal').classList.add('active');
-}
-
-function closeSettings() {
-  document.getElementById('settingsModal').classList.remove('active');
-}
+function toggleModelDropdown() { document.getElementById('modelDropdown').classList.toggle('active'); }
+function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
+function openSettings() { document.getElementById('settingsModal').classList.add('active'); }
+function closeSettings() { document.getElementById('settingsModal').classList.remove('active'); }
 
 function applyTheme(t) {
   document.documentElement.setAttribute('data-theme', t);
@@ -1348,18 +1440,16 @@ function applyTheme(t) {
   document.querySelectorAll('.theme-opt').forEach(btn => btn.classList.toggle('active', btn.dataset.theme === t));
 }
 
-function setTheme(t) {
-  state.theme = t;
-  applyTheme(t);
-}
+function setTheme(t) { state.theme = t; applyTheme(t); }
 
 function getChatHistoryForAPI() {
   if (!state.currentChatId) return [];
   const chat = state.chats.find(c => c.id === state.currentChatId);
   if (!chat || !chat.messages) return [];
-  return chat.messages.slice(-8).map(m => ({
-    role: m.role === 'user' ? 'user' : 'assistant',
-    content: m.content,
+  // Always returns full history regardless of collaborative/solo mode
+  return chat.messages.filter(m => m.role === 'user' || m.role === 'assistant').map(m => ({
+    role: m.role,
+    content: m.content || `[${m.type}]`,
     sender: m.sender || 'AI'
   }));
 }
